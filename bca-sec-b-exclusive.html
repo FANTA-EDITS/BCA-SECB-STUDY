@@ -1879,7 +1879,7 @@ async function cloudSaveUser(user) {
     // Use PUT to a path keyed by username so each user is its own record
     const key = encodeURIComponent(user.username.replace(/[.#$\[\]]/g, '_'));
     const r = await fetch(
-      `https://bca-secb-default-rtdb.firebaseio.com/users/${key}.json`,
+      `${FB_BASE}/users/${key}.json`,
       { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user) }
     );
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -1915,7 +1915,7 @@ function loadUsers() {
 function saveUsers() {
   const toSave = users.filter(u => !BUILTIN_USERS.find(b => b.username === u.username));
   localStorage.setItem(SK.users, JSON.stringify(toSave));
-  cloudSaveAllUsers(toSave); // sync to cloud
+  cloudSaveAllUsers(toSave); // sync full list to cloud
 }
 function loadResources() {
   try { return JSON.parse(localStorage.getItem(SK.resources)) || []; } catch(e) { return []; }
