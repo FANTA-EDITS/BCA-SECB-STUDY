@@ -1,0 +1,2894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BCA SEC B EXCLUSIVE — Study Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #0f1218;
+    --card: #13171f;
+    --border: #1e2530;
+    --accent: #00e5c8;
+    --accent2: #7c6dfa;
+    --accent3: #f7c059;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --danger: #ff6b6b;
+    --success: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+  .glow-blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+  .glow-blob.teal { width: 600px; height: 600px; background: rgba(0,229,200,0.07); top: -200px; right: -100px; }
+  .glow-blob.purple { width: 500px; height: 500px; background: rgba(124,109,250,0.07); bottom: 100px; left: -150px; }
+
+  /* ===== AUTH WALL ===== */
+  #authWall {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .auth-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 420px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .auth-logo {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+  }
+  .auth-logo-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; color: #000;
+  }
+  .auth-logo-text h1 {
+    font-size: 18px; font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .auth-logo-text p { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.1em; margin-top: 2px; }
+  .auth-tabs { display: flex; gap: 8px; margin-bottom: 28px; }
+  .auth-tab {
+    flex: 1; padding: 9px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .auth-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .auth-form { display: flex; flex-direction: column; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; }
+  .form-group input, .form-group select {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+    color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,229,200,0.12); }
+  .form-group input::placeholder { color: var(--muted); }
+  .form-group select option { background: var(--card); }
+  .auth-btn {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #000; border: none; border-radius: 10px;
+    padding: 13px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s, transform 0.2s; margin-top: 4px;
+  }
+  .auth-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .auth-hint { font-size: 11px; color: var(--muted); text-align: center; font-family: 'DM Mono', monospace; margin-top: 6px; }
+  .auth-error { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: var(--danger); border-radius: 8px; padding: 10px 14px; font-size: 12px; display: none; }
+  .auth-error.show { display: block; }
+
+  /* ===== TOP BANNER ===== */
+  .top-banner {
+    position: relative; z-index: 10;
+    background: linear-gradient(90deg, var(--accent2) 0%, var(--accent) 100%);
+    padding: 8px 20px; text-align: center;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #000;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .top-banner .pulse { width: 8px; height: 8px; background: #000; border-radius: 50%; animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+  /* ===== HEADER ===== */
+  header {
+    position: relative; z-index: 10;
+    padding: 22px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    background: rgba(10,12,16,0.8); backdrop-filter: blur(12px);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .logo-box {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: #000;
+  }
+  .header-title h1 {
+    font-size: 17px; font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -0.01em;
+  }
+  .header-title p { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .header-badge {
+    background: rgba(0,229,200,0.1); border: 1px solid rgba(0,229,200,0.25); color: var(--accent);
+    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+  }
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 14px 5px 8px;
+    font-size: 12px; font-family: 'DM Mono', monospace;
+  }
+  .user-avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #000;
+  }
+  .user-role-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .role-admin { background: rgba(247,192,89,0.15); color: var(--accent3); }
+  .role-student { background: rgba(0,229,200,0.1); color: var(--accent); }
+  .logout-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    padding: 6px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px;
+    cursor: pointer; transition: all 0.2s; font-weight: 600;
+  }
+  .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ===== NAV TABS ===== */
+  .nav-tabs-wrap {
+    position: relative; z-index: 10;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex; gap: 0;
+  }
+  .nav-tab {
+    padding: 14px 20px; font-size: 13px; font-weight: 600;
+    color: var(--muted); border-bottom: 2px solid transparent;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Syne', sans-serif;
+  }
+  .nav-tab:hover { color: var(--accent); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ===== PAGE SECTIONS ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative; z-index: 5;
+    padding: 52px 40px 40px; max-width: 900px; margin: 0 auto;
+    text-align: center; animation: fadeUp 0.8s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+
+  /* ===== LOADING SCREEN ===== */
+  #loadingScreen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #loadingScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .ls-logo {
+    width: 72px; height: 72px; border-radius: 20px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; font-weight: 800; color: #000;
+    animation: lsPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes lsPulse {
+    0%,100%{box-shadow:0 0 0 0 rgba(0,229,200,0.45);}
+    50%{box-shadow:0 0 0 22px rgba(0,229,200,0);}
+  }
+  .ls-title { font-size:15px; font-weight:800; letter-spacing:.08em; color:var(--text); }
+  .ls-sub { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:.15em; }
+  .ls-by { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.1em; margin-top:4px; }
+  .ls-by .ls-creator {
+    background: linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+    background-size: 200%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-family:'Syne',sans-serif; font-weight:800; font-size:13px;
+    animation: gradShift 2.5s linear infinite;
+    letter-spacing:.15em;
+  }
+  @keyframes gradShift { 0%{background-position:0%} 100%{background-position:200%} }
+  .ls-bar { width:200px; height:2px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .ls-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent)); border-radius:2px; animation:lsFill 1.8s ease forwards; }
+  @keyframes lsFill { from{width:0} to{width:100%} }
+
+  /* ===== PARTICLES CANVAS ===== */
+  #particleCanvas { position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+  /* ===== CURSOR SPARKLES ===== */
+  .sparkle {
+    position:fixed; pointer-events:none; z-index:9998; border-radius:50%;
+    animation:sparkleFade .7s ease forwards;
+  }
+  @keyframes sparkleFade {
+    0%{opacity:1;transform:scale(1) translate(0,0);}
+    100%{opacity:0;transform:scale(0) translate(var(--tx),var(--ty));}
+  }
+
+  /* ===== RIPPLE ===== */
+  .ripple {
+    position:absolute; border-radius:50%;
+    background:rgba(0,229,200,0.22);
+    transform:scale(0);
+    animation:rippleAnim .65s linear;
+    pointer-events:none;
+  }
+  @keyframes rippleAnim { to{transform:scale(4);opacity:0;} }
+
+  /* ===== CARD SHIMMER ===== */
+  .subject-card::after {
+    content:''; position:absolute; top:-100%; left:-60%;
+    width:45%; height:300%;
+    background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.055) 50%,transparent 60%);
+    transition:left .5s ease;
+  }
+  .subject-card:hover::after { left:130%; }
+
+  /* ===== CREATOR BADGE (fixed floating) ===== */
+  #creatorBadge {
+    position:fixed; bottom:22px; right:22px; z-index:500;
+    background:linear-gradient(135deg,rgba(124,109,250,0.12),rgba(0,229,200,0.12));
+    border:1px solid rgba(0,229,200,0.28); backdrop-filter:blur(14px);
+    border-radius:50px; padding:9px 18px;
+    display:flex; align-items:center; gap:10px;
+    cursor:default; animation:floatUp 3.5s ease-in-out infinite;
+    transition: box-shadow 0.3s;
+  }
+  #creatorBadge:hover { box-shadow:0 0 24px rgba(0,229,200,0.28); }
+  @keyframes floatUp {
+    0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);}
+  }
+  .cb-icon { font-size:18px; }
+  .cb-texts { display:flex; flex-direction:column; gap:1px; }
+  .cb-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.12em; color:var(--muted); }
+  .cb-name {
+    font-family:'Syne',sans-serif; font-size:12px; font-weight:800;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:.06em;
+  }
+
+  /* ===== ENHANCED FOOTER CREATOR STRIP ===== */
+  .footer-creator-strip {
+    border-top:1px solid var(--border);
+    background:linear-gradient(90deg,rgba(124,109,250,0.04),rgba(0,229,200,0.04));
+    padding:14px 40px; text-align:center;
+    font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:.08em;
+    position:relative; z-index:5;
+  }
+  .fcs-name {
+    background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+    background-size:200%;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    font-family:'Syne',sans-serif; font-size:15px; font-weight:800;
+    letter-spacing:.15em; animation:gradShift 3s linear infinite;
+    display:block; margin-top:4px;
+  }
+
+  /* ===== TYPING CURSOR ===== */
+  .type-cursor {
+    display:inline-block; width:3px; height:.85em;
+    background:var(--accent3); vertical-align:middle;
+    animation:typeBlink .8s step-end infinite; margin-left:3px; border-radius:1px;
+  }
+  @keyframes typeBlink { 50%{opacity:0;} }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--accent);
+    border: 1px solid rgba(0,229,200,0.2); background: rgba(0,229,200,0.05);
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 18px;
+  }
+  .hero h2 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 14px; }
+  .hero h2 em { font-style: italic; font-family: 'Lora', serif; color: var(--accent3); font-weight: 400; }
+  .hero p { font-size: 15px; color: var(--muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.7; font-weight: 400; }
+  .stats-row { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .stat .num { font-size: 26px; font-weight: 800; color: var(--accent); }
+  .stat .lbl { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* ===== SEARCH ===== */
+  .search-wrap { position: relative; z-index: 10; max-width: 620px; margin: 0 auto 40px; padding: 0 40px; animation: fadeUp 0.8s 0.15s ease both; }
+  .search-inner { position: relative; }
+  .search-inner input {
+    width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 13px 48px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-inner input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,229,200,0.12); }
+  .search-inner input::placeholder { color: var(--muted); }
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 16px; }
+
+  /* ===== SEM TABS ===== */
+  .tabs-wrap { position: relative; z-index: 10; padding: 0 40px; margin-bottom: 36px; animation: fadeUp 0.8s 0.25s ease both; }
+  .tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0; background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    padding: 8px 18px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .tab:hover { border-color: var(--accent); color: var(--accent); }
+  .tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  /* ===== SECTION ===== */
+  .section-wrap { position: relative; z-index: 5; padding: 0 40px 60px; max-width: 1300px; margin: 0 auto; animation: fadeUp 0.8s 0.3s ease both; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+  .section-title { display: flex; align-items: center; gap: 12px; }
+  .sem-pill {
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em; padding: 4px 10px; border-radius: 6px; font-family: 'DM Mono', monospace;
+  }
+  .section-title h3 { font-size: 19px; font-weight: 700; }
+  .subject-count { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* ===== GRID ===== */
+  .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+  /* ===== SUBJECT CARD ===== */
+  .subject-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px; transition: all 0.25s; cursor: pointer; position: relative; overflow: hidden; display: none;
+  }
+  .subject-card.visible { display: block; animation: fadeUp 0.5s ease both; }
+  .subject-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    border-radius: 14px 14px 0 0; opacity: 0; transition: opacity 0.25s;
+  }
+  .subject-card:hover { border-color: rgba(0,229,200,0.35); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .subject-card:hover::before { opacity: 1; }
+  .card-color-1::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .card-color-2::before { background: linear-gradient(90deg, var(--accent2), var(--danger)); }
+  .card-color-3::before { background: linear-gradient(90deg, var(--accent3), var(--accent)); }
+  .card-color-4::before { background: linear-gradient(90deg, var(--success), var(--accent2)); }
+  .card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
+  .icon-teal { background: rgba(0,229,200,0.12); }
+  .icon-purple { background: rgba(124,109,250,0.12); }
+  .icon-yellow { background: rgba(247,192,89,0.12); }
+  .icon-green { background: rgba(74,222,128,0.12); }
+  .icon-red { background: rgba(255,107,107,0.12); }
+  .card-subject { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .card-code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tag { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 4px; font-family: 'DM Mono', monospace; }
+  .tag-theory { background: rgba(0,229,200,0.1); color: var(--accent); }
+  .tag-lab { background: rgba(124,109,250,0.1); color: var(--accent2); }
+  .tag-math { background: rgba(247,192,89,0.1); color: var(--accent3); }
+  .tag-project { background: rgba(74,222,128,0.1); color: var(--success); }
+  .tag-elective { background: rgba(255,107,107,0.1); color: var(--danger); }
+  .card-resources { display: flex; gap: 8px; margin-top: 4px; }
+  .res-btn {
+    flex: 1; background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    padding: 7px 4px; border-radius: 8px; font-size: 11px; font-weight: 600; text-align: center;
+    cursor: pointer; transition: all 0.2s; font-family: 'Syne', sans-serif;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .res-btn span.ico { font-size: 14px; }
+  .res-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,200,0.06); }
+
+  /* ===== NOTICE BOARD ===== */
+  .notice-board { position: relative; z-index: 5; padding: 0 40px; max-width: 1300px; margin: 0 auto 50px; animation: fadeUp 0.8s 0.35s ease both; }
+  .board-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .board-header h3 { font-size: 18px; font-weight: 700; }
+  .live-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1.5s infinite; }
+  .notices { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .notice {
+    background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 15px 16px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .notice.urgent { border-left-color: var(--danger); }
+  .notice.info { border-left-color: var(--accent2); }
+  .notice.success { border-left-color: var(--success); }
+  .notice-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .notice-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .notice-content p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .notice-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 5px; }
+
+  /* ===== ADMIN PANEL ===== */
+  .admin-panel { padding: 40px; max-width: 1000px; margin: 0 auto; animation: fadeUp 0.6s ease both; }
+  .admin-panel h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+  .admin-panel > p { font-size: 13px; color: var(--muted); margin-bottom: 32px; font-family: 'DM Mono', monospace; }
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .admin-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+  }
+  .admin-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+  .form-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 11px 14px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 13px; outline: none;
+    transition: border-color 0.2s; margin-bottom: 14px;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  select.form-input {
+    appearance: auto; -webkit-appearance: auto; -moz-appearance: auto;
+    cursor: pointer;
+  }
+  select.form-input:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+  .form-textarea { height: 100px; resize: vertical; }
+  .submit-btn {
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000;
+    border: none; border-radius: 10px; padding: 11px 20px;
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; width: 100%;
+  }
+  .submit-btn:hover { opacity: 0.88; }
+  .admin-upload-list { margin-top: 20px; }
+  .upload-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px;
+  }
+  .upload-item .u-icon { font-size: 20px; }
+  .upload-item .u-info { flex: 1; }
+  .upload-item .u-info h5 { font-size: 13px; font-weight: 600; }
+  .upload-item .u-info p { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .delete-btn {
+    background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.2); color: var(--danger);
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .delete-btn:hover { background: rgba(255,107,107,0.2); }
+  .admin-full { grid-column: 1 / -1; }
+
+  /* ===== COMMUNITY PAGE ===== */
+  .community-wrap { padding: 40px; max-width: 900px; margin: 0 auto; animation: fadeUp 0.6s ease both; }
+  .community-wrap h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .community-wrap > p { font-size: 13px; color: var(--muted); margin-bottom: 28px; font-family: 'DM Mono', monospace; }
+  .post-compose {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 28px;
+  }
+  .post-compose h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+  .post-feed { display: flex; flex-direction: column; gap: 16px; }
+  .post-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px;
+    animation: fadeUp 0.4s ease both;
+  }
+  .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .post-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #000;
+  }
+  .post-meta h4 { font-size: 13px; font-weight: 700; }
+  .post-meta p { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .post-body { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+  .post-tag {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 3px 9px; border-radius: 4px; margin-right: 6px; font-family: 'DM Mono', monospace;
+    background: rgba(124,109,250,0.1); color: var(--accent2);
+  }
+  .post-footer { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+  .post-action {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    padding: 5px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Syne', sans-serif;
+    transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+  }
+  .post-action:hover { border-color: var(--accent); color: var(--accent); }
+  .post-action.liked { border-color: var(--danger); color: var(--danger); }
+  .no-posts { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .no-posts .emoji { font-size: 40px; margin-bottom: 12px; }
+
+  /* ===== RESOURCES PAGE ===== */
+  .resources-wrap { padding: 40px; max-width: 1100px; margin: 0 auto; animation: fadeUp 0.6s ease both; }
+  .resources-wrap h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .resources-wrap > p { font-size: 13px; color: var(--muted); margin-bottom: 28px; font-family: 'DM Mono', monospace; }
+  .resources-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .filter-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; font-family: 'Syne', sans-serif;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .resource-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+    transition: all 0.25s; cursor: pointer; animation: fadeUp 0.5s ease both;
+  }
+  .resource-card:hover { border-color: rgba(0,229,200,0.35); transform: translateY(-2px); }
+  .resource-card-icon { font-size: 28px; margin-bottom: 12px; }
+  .resource-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .resource-card p { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .resource-card-meta { display: flex; align-items: center; justify-content: space-between; }
+  .r-type-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; font-family: 'DM Mono', monospace; }
+  .r-type-notes { background: rgba(0,229,200,0.1); color: var(--accent); }
+  .r-type-lab { background: rgba(124,109,250,0.1); color: var(--accent2); }
+  .r-type-qp { background: rgba(247,192,89,0.1); color: var(--accent3); }
+  .r-by { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    max-width: 520px; width: 100%; padding: 30px;
+    transform: scale(0.95) translateY(20px); transition: transform 0.25s;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+  .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+  .modal-title h2 { font-size: 19px; font-weight: 800; margin-bottom: 3px; }
+  .modal-title p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .modal-close {
+    width: 32px; height: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted);
+    font-size: 16px; flex-shrink: 0; transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: var(--danger); color: var(--danger); }
+  .modal-section { margin-bottom: 18px; }
+  .modal-section h4 { font-size: 12px; letter-spacing: 0.1em; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 10px; }
+  .resource-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;
+  }
+  .resource-item:hover { border-color: var(--accent); background: rgba(0,229,200,0.05); }
+  .resource-item .r-icon { font-size: 20px; }
+  .resource-item .r-info h5 { font-size: 13px; font-weight: 600; }
+  .resource-item .r-info p { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: 'DM Mono', monospace; }
+  .resource-item .r-badge { margin-left: auto; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; font-family: 'DM Mono', monospace; }
+  .r-badge.new { background: rgba(0,229,200,0.15); color: var(--accent); }
+  .r-badge.pdf { background: rgba(255,107,107,0.15); color: var(--danger); }
+  .r-badge.ppt { background: rgba(247,192,89,0.15); color: var(--accent3); }
+  .r-badge.vid { background: rgba(124,109,250,0.15); color: var(--accent2); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative; z-index: 5; border-top: 1px solid var(--border);
+    padding: 24px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  footer p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+
+  /* ===== NOTICE ADMIN CONTROLS ===== */
+  .board-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .board-add-btn {
+    margin-left:auto; font-size:11px; font-weight:700;
+    background:rgba(0,229,200,0.08); border:1px solid rgba(0,229,200,0.25); color:var(--accent);
+    padding:5px 14px; border-radius:7px; cursor:pointer;
+    font-family:'Syne',sans-serif; transition:all 0.2s;
+  }
+  .board-add-btn:hover { background:rgba(0,229,200,0.18); }
+  .notice { position:relative; }
+  .notice-admin-btns {
+    display:flex; gap:5px; flex-shrink:0; align-self:flex-start; margin-left:auto; padding-left:8px;
+  }
+  .n-edit-btn, .n-del-btn {
+    font-size:10px; font-weight:700; padding:3px 9px; border-radius:5px;
+    cursor:pointer; border:1px solid; font-family:'Syne',sans-serif; transition:all 0.2s;
+    white-space:nowrap;
+  }
+  .n-edit-btn { background:rgba(124,109,250,0.1); border-color:rgba(124,109,250,0.25); color:var(--accent2); }
+  .n-del-btn  { background:rgba(255,107,107,0.1); border-color:rgba(255,107,107,0.25); color:var(--danger); }
+  .n-edit-btn:hover { background:rgba(124,109,250,0.2); }
+  .n-del-btn:hover  { background:rgba(255,107,107,0.2); }
+
+  /* ===== NOTICE MANAGEMENT IN ADMIN ===== */
+  .notice-mgmt-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:6px;
+  }
+  @media(max-width:700px){ .notice-mgmt-grid { grid-template-columns:1fr; } }
+  .notice-form-side { display:flex; flex-direction:column; gap:0; }
+  .notice-list-side {}
+  .notice-list-item {
+    display:flex; align-items:center; gap:10px; padding:11px 14px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;
+    border-left-width:3px;
+  }
+  .nli-urgent { border-left-color:var(--danger); }
+  .nli-info    { border-left-color:var(--accent2); }
+  .nli-success { border-left-color:var(--success); }
+  .nli-default { border-left-color:var(--accent); }
+  .nli-icon { font-size:18px; flex-shrink:0; }
+  .nli-info-text { flex:1; }
+  .nli-info-text h5 { font-size:13px; font-weight:600; }
+  .nli-info-text p  { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; margin-top:2px; }
+  .nli-actions { display:flex; gap:6px; flex-shrink:0; }
+  .footer-links a:hover { color: var(--accent); }
+
+  .toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 300;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 20px; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+    transform: translateY(80px); opacity: 0; transition: all 0.35s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success-toast { border-color: rgba(74,222,128,0.4); }
+  .toast.error-toast { border-color: rgba(255,107,107,0.4); }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+
+  @media (max-width: 700px) {
+    header, .search-wrap, .tabs-wrap, .section-wrap, .notice-board, .admin-panel, .community-wrap, .resources-wrap { padding-left: 18px; padding-right: 18px; }
+    .hero { padding: 36px 18px 28px; }
+    .admin-grid { grid-template-columns: 1fr; }
+    footer { padding: 18px; }
+    .nav-tabs-wrap { padding: 0 18px; overflow-x: auto; scrollbar-width: none; }
+  }
+
+  /* ===== GROUPED RESOURCE SECTIONS ===== */
+  .res-sem-block { margin-bottom: 40px; }
+  .res-sem-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .res-subject-block { margin-bottom: 24px; }
+  .res-subject-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; border-left: 3px solid var(--accent2); }
+
+  /* Resources page becomes full-width container not grid at top level */
+  #resourcesGrid { display: block; }
+
+  /* ===== MEMBER UPLOAD SECTION ===== */
+  .member-upload-box {
+    background: linear-gradient(135deg, rgba(124,109,250,0.06), rgba(0,229,200,0.04));
+    border: 1px solid rgba(124,109,250,0.2); border-radius: 16px;
+    padding: 26px; margin-bottom: 32px;
+  }
+  .member-upload-box h3 { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .member-upload-box > p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 18px; }
+  .member-notes-divider {
+    border: none; border-top: 1px solid var(--border); margin: 36px 0 28px;
+  }
+  .member-notes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 8px; }
+  .member-notes-header h3 { font-size: 17px; font-weight: 800; }
+  .member-tag { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; font-family: 'DM Mono', monospace; background: rgba(124,109,250,0.12); color: var(--accent2); border: 1px solid rgba(124,109,250,0.2); }
+  .member-note-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px;
+    transition: border-color 0.2s; cursor: pointer;
+  }
+  .member-note-card:hover { border-color: rgba(124,109,250,0.35); }
+  .mn-avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #000;
+  }
+  .mn-body { flex: 1; min-width: 0; }
+  .mn-body h5 { font-size: 13px; font-weight: 700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mn-body p  { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .mn-open-btn {
+    background: rgba(124,109,250,0.1); border: 1px solid rgba(124,109,250,0.25); color: var(--accent2);
+    padding: 6px 13px; border-radius: 7px; font-size: 11px; font-weight: 700;
+    font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+    text-decoration: none; display: inline-block;
+  }
+  .mn-open-btn:hover { background: rgba(124,109,250,0.22); }
+  .mn-del-btn {
+    background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); color: var(--danger);
+    padding: 6px 10px; border-radius: 7px; font-size: 11px; font-weight: 700;
+    font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .mn-del-btn:hover { background: rgba(255,107,107,0.2); }
+
+  /* ===== COMMUNITY ENHANCEMENTS ===== */
+  .community-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .comm-tab {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .comm-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .post-image {
+    width: 100%; max-height: 320px; object-fit: cover; border-radius: 10px;
+    margin-bottom: 10px; border: 1px solid var(--border); display: block;
+  }
+  .post-image-error { display: none; }
+  .cooldown-banner {
+    background: rgba(247,192,89,0.1); border: 1px solid rgba(247,192,89,0.25);
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+    font-size: 13px; color: var(--accent3); font-weight: 600; display: flex; align-items: center; gap: 10px;
+  }
+
+  /* ===== MODERATION BADGES ===== */
+  .mod-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+    font-family: 'DM Mono', monospace; letter-spacing: 0.04em; margin-left: 6px;
+  }
+  .mod-cooldown { background: rgba(247,192,89,0.15); color: var(--accent3); border: 1px solid rgba(247,192,89,0.25); }
+  .mod-kicked   { background: rgba(255,107,107,0.15); color: var(--danger);  border: 1px solid rgba(255,107,107,0.25); }
+
+  /* ===== ADMIN USER MANAGEMENT ===== */
+  .user-mgmt-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .user-mgmt-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .user-mgmt-avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #000;
+  }
+  .user-mgmt-info { flex: 1; min-width: 0; }
+  .user-mgmt-info h5 { font-size: 13px; font-weight: 700; }
+  .user-mgmt-info p  { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .user-mgmt-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+  .mod-btn {
+    font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 7px;
+    cursor: pointer; border: 1px solid; font-family: 'Syne', sans-serif; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .mod-btn-promo { background: rgba(124,109,250,0.1); border-color: rgba(124,109,250,0.2); color: var(--accent2); }
+  .mod-btn-promo:hover { background: rgba(124,109,250,0.2); }
+  .mod-btn-cool  { background: rgba(247,192,89,0.1);  border-color: rgba(247,192,89,0.25);  color: var(--accent3); }
+  .mod-btn-cool:hover  { background: rgba(247,192,89,0.2); }
+  .mod-btn-kick  { background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.2); color: var(--danger); }
+  .mod-btn-kick:hover  { background: rgba(255,107,107,0.18); }
+  .mod-btn-del   { background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.3); color: var(--danger); font-weight: 800; }
+  .mod-btn-del:hover   { background: rgba(255,107,107,0.25); }
+  .mod-btn-lift  { background: rgba(74,222,128,0.08);  border-color: rgba(74,222,128,0.2);   color: var(--success); }
+  .mod-btn-lift:hover  { background: rgba(74,222,128,0.18); }
+
+  /* ===== MODERATION MODAL ===== */
+  .mod-modal-overlay {
+    position: fixed; inset: 0; z-index: 400;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .mod-modal-overlay.open { display: flex; }
+  .mod-modal-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    padding: 30px; max-width: 380px; width: 100%;
+    animation: fadeUp 0.25s ease both;
+  }
+  .mod-modal-box h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+  .mod-modal-box p  { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
+  .mod-modal-btns { display: flex; gap: 10px; }
+  .mod-cancel-btn {
+    flex: 1; background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    padding: 10px; border-radius: 9px; font-size: 13px; font-weight: 600;
+    font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.2s;
+  }
+  .mod-cancel-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mod-confirm-btn {
+    flex: 1; background: var(--danger); border: none; color: #fff;
+    padding: 10px; border-radius: 9px; font-size: 13px; font-weight: 800;
+    font-family: 'Syne', sans-serif; cursor: pointer; transition: opacity 0.2s;
+  }
+  .mod-confirm-btn:hover { opacity: 0.85; }
+  .mod-confirm-btn.safe { background: var(--accent2); }
+
+  /* ===== KICKED / RESTRICTED OVERLAY ===== */
+  #kickedOverlay {
+    position: fixed; inset: 0; z-index: 9991;
+    background: var(--bg);
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 14px; text-align: center; padding: 30px;
+  }
+  #kickedOverlay.show { display: flex; }
+  .kicked-icon { font-size: 58px; margin-bottom: 4px; }
+  .kicked-title { font-size: 24px; font-weight: 800; color: var(--danger); }
+  .kicked-sub   { font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; max-width: 380px; line-height: 1.65; }
+  .kicked-timer { font-size: 13px; color: var(--accent3); font-family: 'DM Mono', monospace; margin-top: 4px; }
+  .kicked-logout {
+    margin-top: 10px; background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); padding: 10px 24px; border-radius: 9px;
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .kicked-logout:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ===== ADMIN MEMBER NOTES PANEL ===== */
+  .admin-mn-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 11px;
+    padding: 13px 15px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  }
+  .admin-mn-info { flex: 1; min-width: 0; }
+  .admin-mn-info h5 { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .admin-mn-info p  { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .admin-mn-actions { display: flex; gap: 6px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOADING SCREEN ===== -->
+<div id="loadingScreen">
+  <div class="ls-logo">B</div>
+  <div class="ls-title">BCA SEC B EXCLUSIVE</div>
+  <div class="ls-sub">B.P. PODDAR INSTITUTE · SALT LAKE</div>
+  <div class="ls-bar"><div class="ls-bar-fill"></div></div>
+  <div class="ls-by">Crafted by &nbsp;<span class="ls-creator">SWATTICK BHOWMICK</span></div>
+</div>
+
+<!-- ===== FLOATING PARTICLES ===== -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- ===== CREATOR BADGE ===== -->
+<div id="creatorBadge" title="Website Creator">
+  <div class="cb-icon">✦</div>
+  <div class="cb-texts">
+    <span class="cb-label">CRAFTED BY</span>
+    <span class="cb-name">SWATTICK BHOWMICK</span>
+  </div>
+</div>
+
+<div class="glow-blob teal"></div>
+<div class="glow-blob purple"></div>
+
+<!-- ===== AUTH WALL ===== -->
+<div id="authWall">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">B</div>
+      <div class="auth-logo-text">
+        <h1>BCA SEC B EXCLUSIVE</h1>
+        <p>B.P. PODDAR INSTITUTE · SALT LAKE</p>
+      </div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login', this)">Login</button>
+      <button class="auth-tab" onclick="switchAuthTab('register', this)">Register</button>
+    </div>
+    <div id="loginForm" class="auth-form">
+      <div id="loginError" class="auth-error"></div>
+      <div class="form-group">
+        <label>USERNAME</label>
+        <input type="text" id="loginUser" placeholder="Enter username" />
+      </div>
+      <div class="form-group">
+        <label>PASSWORD</label>
+        <input type="password" id="loginPass" placeholder="Enter password" />
+      </div>
+      <button class="auth-btn" onclick="doLogin()">Login →</button>
+      <p class="auth-hint">Admin access is restricted to authorized members only</p>
+    </div>
+    <div id="registerForm" class="auth-form" style="display:none;">
+      <div id="regError" class="auth-error"></div>
+      <div class="form-group">
+        <label>FULL NAME</label>
+        <input type="text" id="regName" placeholder="Your full name" />
+      </div>
+      <div class="form-group">
+        <label>USERNAME</label>
+        <input type="text" id="regUser" placeholder="Choose a username" />
+      </div>
+      <div class="form-group">
+        <label>PASSWORD</label>
+        <input type="password" id="regPass" placeholder="Create a password" />
+      </div>
+      <div class="form-group">
+        <label>ROLL NUMBER</label>
+        <input type="text" id="regRoll" placeholder="e.g. BCA/2024/001" />
+      </div>
+      <button class="auth-btn" onclick="doRegister()">Create Account →</button>
+      <p class="auth-hint">For admin access, contact the site admin</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="mainApp" style="display:none;">
+  <div class="top-banner">
+    <span class="pulse"></span>
+    BCA SEC B EXCLUSIVE — B.P. Poddar Institute of Management &amp; Technology, Salt Lake · Batch 2026
+  </div>
+
+  <header>
+    <div class="header-left">
+      <div class="logo-box">B</div>
+      <div class="header-title">
+        <h1>BCA SEC B EXCLUSIVE</h1>
+        <p>B.P. PODDAR INSTITUTE · SALT LAKE</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="header-badge">BCA 2026 BATCH</span>
+      <span class="header-badge" style="border-color:rgba(124,109,250,0.3);background:rgba(124,109,250,0.08);color:var(--accent2);">SEC B</span>
+      <div class="user-pill">
+        <div class="user-avatar" id="userAvatarHead"></div>
+        <span id="userNameHead" style="font-size:12px;"></span>
+        <span id="userRoleHead" class="user-role-badge"></span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="nav-tabs-wrap">
+    <button class="nav-tab active" onclick="switchPage('home', this)">🏠 Home</button>
+    <button class="nav-tab" onclick="switchPage('resources', this)">📚 Resources</button>
+    <button class="nav-tab" onclick="switchPage('community', this)">💬 Community</button>
+    <button class="nav-tab admin-only" onclick="switchPage('admin', this)" style="display:none;">⚙️ Admin Panel</button>
+  </div>
+
+  <!-- ========== HOME PAGE ========== -->
+  <div id="homePage" class="page active">
+    <section class="hero">
+      <div class="hero-eyebrow">📚 YOUR ACADEMIC COMPANION</div>
+      <h2>All your notes,<br><em>one place.</em></h2>
+      <p>Access lecture notes, study material, question papers, lab files and important resources for every subject of your BCA journey — organized semester-wise.</p>
+      <div class="stats-row">
+        <div class="stat"><div class="num">8</div><div class="lbl">SEMESTERS</div><div style="font-size:9px;color:var(--accent3);font-family:'DM Mono',monospace;letter-spacing:0.08em;margin-top:3px;">AICTE APPROVED · 4 YRS</div></div>
+        <div class="stat"><div class="num">40+</div><div class="lbl">SUBJECTS</div></div>
+        <div class="stat"><div class="num">∞</div><div class="lbl">RESOURCES</div></div>
+      </div>
+    </section>
+
+    <div class="search-wrap">
+      <div class="search-inner">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search subjects, topics, semester…" oninput="filterCards()" />
+      </div>
+    </div>
+
+    <div class="tabs-wrap">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('all',this)">All Semesters</button>
+        <button class="tab" onclick="switchTab('sem1',this)">Semester 1</button>
+        <button class="tab" onclick="switchTab('sem2',this)">Semester 2</button>
+        <button class="tab" onclick="switchTab('sem3',this)">Semester 3</button>
+        <button class="tab" onclick="switchTab('sem4',this)">Semester 4</button>
+        <button class="tab" onclick="switchTab('sem5',this)">Semester 5</button>
+        <button class="tab" onclick="switchTab('sem6',this)">Semester 6</button>
+        <button class="tab" onclick="switchTab('sem7',this)">Semester 7</button>
+        <button class="tab" onclick="switchTab('sem8',this)">Semester 8</button>
+      </div>
+    </div>
+
+    <!-- NOTICE BOARD -->
+    <div class="notice-board">
+      <div class="board-header">
+        <div class="live-dot"></div>
+        <h3>📌 Notice Board</h3>
+        <button class="board-add-btn admin-only" style="display:none;" onclick="switchPage('admin', document.querySelector('.admin-only')); setTimeout(()=>document.getElementById('noticeTitle').focus(),300)">+ Add Notice</button>
+      </div>
+      <div class="notices" id="noticeBoard"></div>
+    </div>
+
+    <!-- SEMESTER SECTIONS -->
+    <div class="section-wrap">
+      <!-- SEM 1 -->
+      <div class="sem-block" data-sem="sem1" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 01</span><h3>First Semester</h3></div>
+          <span class="subject-count">5 Subjects</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-1" data-sem="sem1" data-name="fundamentals of computers" onclick="openModal('Fundamentals of Computers','BCA-101','sem1')">
+            <div class="card-icon icon-teal">💻</div>
+            <div class="card-subject">Fundamentals of Computers</div>
+            <div class="card-code">BCA-101</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem1" data-name="mathematics i" onclick="openModal('Mathematics I','BCA-102','sem1')">
+            <div class="card-icon icon-yellow">📐</div>
+            <div class="card-subject">Mathematics I</div>
+            <div class="card-code">BCA-102</div>
+            <div class="card-tags"><span class="tag tag-math">MATH</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem1" data-name="programming in c" onclick="openModal('Programming in C','BCA-103','sem1')">
+            <div class="card-icon icon-purple">⌨️</div>
+            <div class="card-subject">Programming in C</div>
+            <div class="card-code">BCA-103</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem1" data-name="business communication" onclick="openModal('Business Communication','BCA-104','sem1')">
+            <div class="card-icon icon-green">🗣️</div>
+            <div class="card-subject">Business Communication</div>
+            <div class="card-code">BCA-104</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem1" data-name="digital electronics" onclick="openModal('Digital Electronics','BCA-105','sem1')">
+            <div class="card-icon icon-teal">🔌</div>
+            <div class="card-subject">Digital Electronics</div>
+            <div class="card-code">BCA-105</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 2 -->
+      <div class="sem-block" data-sem="sem2" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 02</span><h3>Second Semester</h3></div>
+          <span class="subject-count">5 Subjects</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-2" data-sem="sem2" data-name="data structures" onclick="openModal('Data Structures','BCA-201','sem2')">
+            <div class="card-icon icon-purple">🌲</div>
+            <div class="card-subject">Data Structures</div>
+            <div class="card-code">BCA-201</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem2" data-name="mathematics ii" onclick="openModal('Mathematics II','BCA-202','sem2')">
+            <div class="card-icon icon-yellow">∑</div>
+            <div class="card-subject">Mathematics II</div>
+            <div class="card-code">BCA-202</div>
+            <div class="card-tags"><span class="tag tag-math">MATH</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem2" data-name="oop programming with java" onclick="openModal('OOP Programming with Java','BCA-203','sem2')">
+            <div class="card-icon icon-teal">☕</div>
+            <div class="card-subject">OOP Programming with Java</div>
+            <div class="card-code">BCA-203</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem2" data-name="computer organisation" onclick="openModal('Computer Organisation','BCA-204','sem2')">
+            <div class="card-icon icon-green">🖥️</div>
+            <div class="card-subject">Computer Organisation</div>
+            <div class="card-code">BCA-204</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem2" data-name="operating systems" onclick="openModal('Operating Systems','BCA-205','sem2')">
+            <div class="card-icon icon-purple">⚙️</div>
+            <div class="card-subject">Operating Systems</div>
+            <div class="card-code">BCA-205</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 3 -->
+      <div class="sem-block" data-sem="sem3" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 03</span><h3>Third Semester</h3></div>
+          <span class="subject-count">5 Subjects</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-3" data-sem="sem3" data-name="database management systems dbms" onclick="openModal('Database Management Systems','BCA-301','sem3')">
+            <div class="card-icon icon-yellow">🗄️</div>
+            <div class="card-subject">Database Management Systems</div>
+            <div class="card-code">BCA-301</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem3" data-name="computer networks" onclick="openModal('Computer Networks','BCA-302','sem3')">
+            <div class="card-icon icon-teal">🌐</div>
+            <div class="card-subject">Computer Networks</div>
+            <div class="card-code">BCA-302</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem3" data-name="python programming" onclick="openModal('Python Programming','BCA-303','sem3')">
+            <div class="card-icon icon-green">🐍</div>
+            <div class="card-subject">Python Programming</div>
+            <div class="card-code">BCA-303</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem3" data-name="software engineering" onclick="openModal('Software Engineering','BCA-304','sem3')">
+            <div class="card-icon icon-purple">🛠️</div>
+            <div class="card-subject">Software Engineering</div>
+            <div class="card-code">BCA-304</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem3" data-name="statistics" onclick="openModal('Statistics','BCA-305','sem3')">
+            <div class="card-icon icon-yellow">📊</div>
+            <div class="card-subject">Statistics</div>
+            <div class="card-code">BCA-305</div>
+            <div class="card-tags"><span class="tag tag-math">MATH</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 4 -->
+      <div class="sem-block" data-sem="sem4" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 04</span><h3>Fourth Semester</h3></div>
+          <span class="subject-count">5 Subjects</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-1" data-sem="sem4" data-name="web technologies" onclick="openModal('Web Technologies','BCA-401','sem4')">
+            <div class="card-icon icon-teal">🌍</div>
+            <div class="card-subject">Web Technologies</div>
+            <div class="card-code">BCA-401</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem4" data-name="algorithms design and analysis" onclick="openModal('Algorithm Design & Analysis','BCA-402','sem4')">
+            <div class="card-icon icon-green">🔢</div>
+            <div class="card-subject">Algorithm Design & Analysis</div>
+            <div class="card-code">BCA-402</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem4" data-name="computer graphics" onclick="openModal('Computer Graphics','BCA-403','sem4')">
+            <div class="card-icon icon-purple">🎨</div>
+            <div class="card-subject">Computer Graphics</div>
+            <div class="card-code">BCA-403</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem4" data-name="microprocessor" onclick="openModal('Microprocessor','BCA-404','sem4')">
+            <div class="card-icon icon-yellow">🔬</div>
+            <div class="card-subject">Microprocessor</div>
+            <div class="card-code">BCA-404</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem4" data-name="numerical methods" onclick="openModal('Numerical Methods','BCA-405','sem4')">
+            <div class="card-icon icon-teal">🔣</div>
+            <div class="card-subject">Numerical Methods</div>
+            <div class="card-code">BCA-405</div>
+            <div class="card-tags"><span class="tag tag-math">MATH</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 5 -->
+      <div class="sem-block" data-sem="sem5" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 05</span><h3>Fifth Semester</h3></div>
+          <span class="subject-count">5 Subjects</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-4" data-sem="sem5" data-name="artificial intelligence" onclick="openModal('Artificial Intelligence','BCA-501','sem5')">
+            <div class="card-icon icon-green">🤖</div>
+            <div class="card-subject">Artificial Intelligence</div>
+            <div class="card-code">BCA-501</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem5" data-name="mobile application development" onclick="openModal('Mobile App Development','BCA-502','sem5')">
+            <div class="card-icon icon-purple">📱</div>
+            <div class="card-subject">Mobile App Development</div>
+            <div class="card-code">BCA-502</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem5" data-name="information security" onclick="openModal('Information Security','BCA-503','sem5')">
+            <div class="card-icon icon-yellow">🔐</div>
+            <div class="card-subject">Information Security</div>
+            <div class="card-code">BCA-503</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem5" data-name="cloud computing" onclick="openModal('Cloud Computing','BCA-504','sem5')">
+            <div class="card-icon icon-teal">☁️</div>
+            <div class="card-subject">Cloud Computing</div>
+            <div class="card-code">BCA-504</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-elective">ELECTIVE</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem5" data-name="project management" onclick="openModal('Project Management','BCA-505','sem5')">
+            <div class="card-icon icon-green">📋</div>
+            <div class="card-subject">Project Management</div>
+            <div class="card-code">BCA-505</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 6 -->
+      <div class="sem-block" data-sem="sem6" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 06</span><h3>Sixth Semester</h3></div>
+          <span class="subject-count">4 Subjects + Project</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-2" data-sem="sem6" data-name="machine learning" onclick="openModal('Machine Learning','BCA-601','sem6')">
+            <div class="card-icon icon-purple">🧠</div>
+            <div class="card-subject">Machine Learning</div>
+            <div class="card-code">BCA-601</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem6" data-name="internet of things iot" onclick="openModal('Internet of Things (IoT)','BCA-602','sem6')">
+            <div class="card-icon icon-yellow">📡</div>
+            <div class="card-subject">Internet of Things (IoT)</div>
+            <div class="card-code">BCA-602</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-elective">ELECTIVE</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem6" data-name="big data analytics" onclick="openModal('Big Data Analytics','BCA-603','sem6')">
+            <div class="card-icon icon-teal">📈</div>
+            <div class="card-subject">Big Data Analytics</div>
+            <div class="card-code">BCA-603</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem6" data-name="entrepreneurship" onclick="openModal('Entrepreneurship','BCA-604','sem6')">
+            <div class="card-icon icon-green">💼</div>
+            <div class="card-subject">Entrepreneurship</div>
+            <div class="card-code">BCA-604</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem6" data-name="major project" onclick="openModal('Major Project','BCA-605','sem6')">
+            <div class="card-icon icon-purple">🚀</div>
+            <div class="card-subject">Major Project</div>
+            <div class="card-code">BCA-605</div>
+            <div class="card-tags"><span class="tag tag-project">PROJECT</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📋</span>Guidelines</div>
+              <div class="res-btn"><span class="ico">📝</span>Templates</div>
+              <div class="res-btn"><span class="ico">💡</span>Ideas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 7 -->
+      <div class="sem-block" data-sem="sem7" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 07</span><h3>Seventh Semester</h3></div>
+          <span class="subject-count">5 Subjects</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-1" data-sem="sem7" data-name="deep learning neural networks" onclick="openModal('Deep Learning & Neural Networks','BCA-701','sem7')">
+            <div class="card-icon icon-teal">🧠</div>
+            <div class="card-subject">Deep Learning & Neural Networks</div>
+            <div class="card-code">BCA-701</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem7" data-name="full stack web development" onclick="openModal('Full Stack Web Development','BCA-702','sem7')">
+            <div class="card-icon icon-purple">🌐</div>
+            <div class="card-subject">Full Stack Web Development</div>
+            <div class="card-code">BCA-702</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem7" data-name="blockchain technology" onclick="openModal('Blockchain Technology','BCA-703','sem7')">
+            <div class="card-icon icon-yellow">⛓️</div>
+            <div class="card-subject">Blockchain Technology</div>
+            <div class="card-code">BCA-703</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem7" data-name="human computer interaction hci" onclick="openModal('Human Computer Interaction','BCA-704','sem7')">
+            <div class="card-icon icon-green">🖱️</div>
+            <div class="card-subject">Human Computer Interaction</div>
+            <div class="card-code">BCA-704</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem7" data-name="devops cloud native applications" onclick="openModal('DevOps & Cloud Native Apps','BCA-705','sem7')">
+            <div class="card-icon icon-teal">⚙️</div>
+            <div class="card-subject">DevOps & Cloud Native Apps</div>
+            <div class="card-code">BCA-705</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-elective">ELECTIVE</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEM 8 -->
+      <div class="sem-block" data-sem="sem8" style="margin-bottom:48px;">
+        <div class="section-header">
+          <div class="section-title"><span class="sem-pill">SEM 08</span><h3>Eighth Semester</h3></div>
+          <span class="subject-count">3 Subjects + Internship + Project</span>
+        </div>
+        <div class="subjects-grid">
+          <div class="subject-card visible card-color-2" data-sem="sem8" data-name="cyber forensics ethical hacking" onclick="openModal('Cyber Forensics & Ethical Hacking','BCA-801','sem8')">
+            <div class="card-icon icon-purple">🕵️</div>
+            <div class="card-subject">Cyber Forensics & Ethical Hacking</div>
+            <div class="card-code">BCA-801</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-lab">LAB</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">🧪</span>Lab Copy</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-3" data-sem="sem8" data-name="augmented reality virtual reality xr" onclick="openModal('AR/VR & Extended Reality','BCA-802','sem8')">
+            <div class="card-icon icon-yellow">🥽</div>
+            <div class="card-subject">AR/VR & Extended Reality</div>
+            <div class="card-code">BCA-802</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span><span class="tag tag-elective">ELECTIVE</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-4" data-sem="sem8" data-name="research methodology technical writing" onclick="openModal('Research Methodology & Technical Writing','BCA-803','sem8')">
+            <div class="card-icon icon-green">📖</div>
+            <div class="card-subject">Research Methodology & Technical Writing</div>
+            <div class="card-code">BCA-803</div>
+            <div class="card-tags"><span class="tag tag-theory">THEORY</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📝</span>Notes</div>
+              <div class="res-btn"><span class="ico">📄</span>Q-Papers</div>
+              <div class="res-btn"><span class="ico">📊</span>PPTs</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-1" data-sem="sem8" data-name="industry internship industrial training" onclick="openModal('Industry Internship','BCA-804','sem8')">
+            <div class="card-icon icon-teal">🏢</div>
+            <div class="card-subject">Industry Internship</div>
+            <div class="card-code">BCA-804</div>
+            <div class="card-tags"><span class="tag tag-project">PROJECT</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📋</span>Guidelines</div>
+              <div class="res-btn"><span class="ico">📝</span>Report Format</div>
+              <div class="res-btn"><span class="ico">💡</span>Resources</div>
+            </div>
+          </div>
+          <div class="subject-card visible card-color-2" data-sem="sem8" data-name="final year project dissertation" onclick="openModal('Final Year Project (Dissertation)','BCA-805','sem8')">
+            <div class="card-icon icon-purple">🎓</div>
+            <div class="card-subject">Final Year Project (Dissertation)</div>
+            <div class="card-code">BCA-805</div>
+            <div class="card-tags"><span class="tag tag-project">PROJECT</span></div>
+            <div class="card-resources">
+              <div class="res-btn"><span class="ico">📋</span>Guidelines</div>
+              <div class="res-btn"><span class="ico">📝</span>Templates</div>
+              <div class="res-btn"><span class="ico">💡</span>Ideas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== RESOURCES PAGE ========== -->
+  <div id="resourcesPage" class="page">
+    <div class="resources-wrap">
+      <h2>📚 Upload &amp; Resources</h2>
+      <p>Official admin resources + community notes from your batchmates — share freely!</p>
+
+      <!-- MEMBER UPLOAD SECTION — open to all -->
+      <div class="member-upload-box">
+        <h3>📤 Share Your Notes</h3>
+        <p>ANYONE CAN UPLOAD — share study material, handwritten notes, or helpful links with your batch!</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="form-label">YOUR NAME / INITIALS</label>
+            <input type="text" class="form-input" id="mnAuthorDisplay" placeholder="e.g. Swattick B." style="margin-bottom:0;" />
+          </div>
+          <div>
+            <label class="form-label">SUBJECT</label>
+            <select class="form-input" id="mnSubject" style="margin-bottom:0;">
+              <option value="">— Choose Subject —</option>
+            </select>
+          </div>
+        </div>
+        <label class="form-label" style="margin-top:14px;">NOTE TITLE</label>
+        <input type="text" class="form-input" id="mnTitle" placeholder="e.g. DBMS Unit 4 Handwritten Notes" />
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="form-label">TYPE</label>
+            <select class="form-input" id="mnType" style="margin-bottom:0;">
+              <option value="notes">📝 Notes</option>
+              <option value="lab">🧪 Lab Copy</option>
+              <option value="qp">📄 Question Paper</option>
+              <option value="other">📁 Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">DRIVE / ANY LINK</label>
+            <input type="text" class="form-input" id="mnLink" placeholder="https://drive.google.com/..." style="margin-bottom:0;" />
+          </div>
+        </div>
+        <label class="form-label" style="margin-top:14px;">DESCRIPTION (optional)</label>
+        <textarea class="form-input form-textarea" id="mnDesc" placeholder="What does this cover? Any units or topics?" style="height:72px;"></textarea>
+        <button class="submit-btn" onclick="submitMemberNote()" style="margin-top:4px;">Share with Batchmates →</button>
+      </div>
+
+      <!-- OFFICIAL ADMIN RESOURCES -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+        <h3 style="font-size:17px;font-weight:800;">🗂️ Official Resources</h3>
+        <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">Uploaded by admins</span>
+      </div>
+      <div class="resources-filter">
+        <button class="filter-btn active" onclick="filterResources('all',this)">All Types</button>
+        <button class="filter-btn" onclick="filterResources('notes',this)">📝 Notes</button>
+        <button class="filter-btn" onclick="filterResources('lab',this)">🧪 Lab Copies</button>
+        <button class="filter-btn" onclick="filterResources('qp',this)">📄 Question Papers</button>
+      </div>
+      <div class="resources-grid" id="resourcesGrid"></div>
+      <div class="empty-state" id="resourcesEmpty" style="display:none;">
+        <div class="emoji">📭</div>
+        <p>No official resources yet. Admins will add them soon!</p>
+      </div>
+
+      <!-- MEMBER NOTES SECTION -->
+      <hr class="member-notes-divider" />
+      <div class="member-notes-header">
+        <h3>👥 Shared by Batchmates</h3>
+        <span class="member-tag">COMMUNITY UPLOADS</span>
+      </div>
+      <div id="memberNotesList"></div>
+      <div class="empty-state" id="memberNotesEmpty" style="display:none;">
+        <div class="emoji">🤝</div>
+        <p>No one has shared notes yet — be the first!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== COMMUNITY PAGE ========== -->
+  <div id="communityPage" class="page">
+    <div class="community-wrap">
+      <h2>💬 Community Board</h2>
+      <p>Share study tips, pictures, notes, doubts &amp; casual chat with your batchmates</p>
+
+      <!-- Cooldown banner (shown if user is on cooldown) -->
+      <div class="cooldown-banner" id="cooldownBanner" style="display:none;">
+        ⏳ <span id="cooldownMsg">You are currently on a posting cooldown set by an admin.</span>
+      </div>
+
+      <div class="post-compose">
+        <h3>✏️ Share something</h3>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">TITLE</label>
+          <input type="text" class="form-input" id="postTitle" placeholder="e.g. DBMS Unit 3 Notes, Today's class fun 😄" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">MESSAGE / CONTENT / LINK</label>
+          <textarea class="form-input form-textarea" id="postBody" placeholder="Share anything — study tips, a funny moment, a helpful link, or just say something casual! 🎉"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">IMAGE URL (optional — paste any direct image link)</label>
+          <input type="text" class="form-input" id="postImage" placeholder="https://i.imgur.com/... or any image URL" />
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">TAG</label>
+          <select class="form-input" id="postTag">
+            <option value="notes">📝 Notes</option>
+            <option value="doubt">❓ Doubt</option>
+            <option value="tip">💡 Tip</option>
+            <option value="resource">🔗 Resource</option>
+            <option value="photo">📸 Photo / Meme</option>
+            <option value="casual">💬 Casual Talk</option>
+            <option value="announcement">📢 Announcement</option>
+          </select>
+        </div>
+        <button class="submit-btn" onclick="submitPost()" id="postSubmitBtn">Post to Community →</button>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="community-tabs" id="commTabs">
+        <button class="comm-tab active" onclick="filterPosts('all',this)">All Posts</button>
+        <button class="comm-tab" onclick="filterPosts('notes',this)">📝 Notes</button>
+        <button class="comm-tab" onclick="filterPosts('photo',this)">📸 Photos</button>
+        <button class="comm-tab" onclick="filterPosts('casual',this)">💬 Casual</button>
+        <button class="comm-tab" onclick="filterPosts('doubt',this)">❓ Doubts</button>
+      </div>
+
+      <div class="post-feed" id="postFeed"></div>
+      <div class="no-posts" id="noPosts">
+        <div class="emoji">🌟</div>
+        <p>Be the first to share something! Your batchmates will thank you.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ADMIN PAGE ========== -->
+  <div id="adminPage" class="page">
+    <div class="admin-panel">
+      <h2>⚙️ Admin Panel</h2>
+      <p>Manage resources, community posts, members &amp; moderation</p>
+      <div class="admin-grid">
+
+        <!-- UPLOAD OFFICIAL RESOURCE -->
+        <div class="admin-card">
+          <h3>📤 Upload Official Resource</h3>
+          <label class="form-label">STEP 1 — SELECT SUBJECT</label>
+          <select class="form-input" id="adminSubject">
+            <option value="">— Choose a Subject —</option>
+          </select>
+          <label class="form-label">STEP 2 — RESOURCE TITLE</label>
+          <input type="text" class="form-input" id="adminTitle" placeholder="e.g. Unit 3 - Functions Notes" />
+          <label class="form-label">RESOURCE TYPE</label>
+          <select class="form-input" id="adminType">
+            <option value="notes">📝 Notes</option>
+            <option value="lab">🧪 Lab Copy</option>
+            <option value="qp">📄 Question Paper</option>
+          </select>
+          <label class="form-label">DRIVE LINK / URL</label>
+          <input type="text" class="form-input" id="adminLink" placeholder="https://drive.google.com/..." />
+          <label class="form-label">DESCRIPTION (optional)</label>
+          <textarea class="form-input form-textarea" id="adminDesc" placeholder="Brief description of the resource..."></textarea>
+          <button class="submit-btn" onclick="adminUpload()">Upload Resource →</button>
+        </div>
+
+        <!-- MANAGE OFFICIAL UPLOADS -->
+        <div class="admin-card">
+          <h3>📋 Manage Official Uploads</h3>
+          <div id="adminUploadList">
+            <div class="empty-state" style="padding:30px 0;"><div class="emoji">📭</div><p style="font-size:13px;">No resources uploaded yet</p></div>
+          </div>
+        </div>
+
+        <!-- MEMBER-UPLOADED NOTES MANAGEMENT -->
+        <div class="admin-card admin-full">
+          <h3>👥 Manage Member Notes <span id="mnAdminCount" style="font-size:12px;color:var(--muted);font-weight:400;font-family:'DM Mono',monospace;"></span></h3>
+          <p style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:16px;">Notes shared by students — review and remove if inappropriate.</p>
+          <div id="adminMemberNotesList">
+            <div class="empty-state" style="padding:30px 0;"><div class="emoji">📝</div><p style="font-size:13px;">No member notes uploaded yet</p></div>
+          </div>
+        </div>
+
+        <!-- USER MANAGEMENT & MODERATION -->
+        <div class="admin-card admin-full">
+          <h3>🛡️ Member Management &amp; Moderation</h3>
+          <p style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:18px;">Delete members · Apply cooldown (blocks posting) · Kick (temporary site ban) · Lift restrictions</p>
+          <div id="usersList"></div>
+        </div>
+
+        <!-- CHANGE PASSWORD -->
+        <div class="admin-card admin-full">
+          <h3>🔑 Change Password</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;align-items:end;">
+            <div>
+              <label class="form-label">CURRENT PASSWORD</label>
+              <input type="password" class="form-input" id="pwCurrent" placeholder="Enter current password" autocomplete="current-password" />
+            </div>
+            <div>
+              <label class="form-label">NEW PASSWORD</label>
+              <input type="password" class="form-input" id="pwNew" placeholder="Min. 6 characters" autocomplete="new-password" />
+            </div>
+            <div>
+              <label class="form-label">CONFIRM NEW PASSWORD</label>
+              <input type="password" class="form-input" id="pwConfirm" placeholder="Repeat new password" autocomplete="new-password" />
+            </div>
+            <div>
+              <button class="submit-btn" onclick="changeAdminPassword()" style="margin-bottom:0;">Change Password →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTICE BOARD -->
+        <div class="admin-card admin-full">
+          <h3>📌 Manage Notice Board</h3>
+          <div class="notice-mgmt-grid">
+            <div class="notice-form-side">
+              <label class="form-label">NOTICE TITLE</label>
+              <input type="text" class="form-input" id="noticeTitle" placeholder="e.g. Exam Schedule Released" />
+              <label class="form-label">MESSAGE</label>
+              <textarea class="form-input form-textarea" id="noticeBody" placeholder="Notice content visible to all students..."></textarea>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                  <label class="form-label">TYPE</label>
+                  <select class="form-input" id="noticeType">
+                    <option value="urgent">🔴 Urgent</option>
+                    <option value="info">🔵 Info</option>
+                    <option value="success">🟢 Success / Achievement</option>
+                    <option value="default">⚪ General</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">ICON (EMOJI)</label>
+                  <input type="text" class="form-input" id="noticeIcon" placeholder="⚠️" maxlength="4" style="font-size:18px;text-align:center;" />
+                </div>
+              </div>
+              <input type="hidden" id="noticeEditId" value="" />
+              <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="submit-btn" id="noticeSubmitBtn" onclick="submitNotice()" style="flex:1;">Post Notice →</button>
+                <button class="submit-btn" id="noticeCancelBtn" onclick="cancelEditNotice()" style="flex:0 0 auto;padding:11px 18px;background:var(--surface);color:var(--muted);border:1px solid var(--border);display:none;">✕ Cancel</button>
+              </div>
+            </div>
+            <div class="notice-list-side">
+              <div id="adminNoticeList"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>© 2026 BCA SEC B EXCLUSIVE · B.P. Poddar Institute · Salt Lake</p>
+    <div class="footer-links">
+      <a href="#">ERP Portal</a>
+      <a href="#">MAKAUT</a>
+      <a href="#">Contact Admin</a>
+    </div>
+  </footer>
+  <div class="footer-creator-strip">
+    Designed &amp; Developed with ❤️ by
+    <span class="fcs-name">SWATTICK BHOWMICK</span>
+  </div>
+</div>
+
+<!-- ===== KICKED OVERLAY ===== -->
+<div id="kickedOverlay">
+  <div class="kicked-icon">🚫</div>
+  <div class="kicked-title">Access Restricted</div>
+  <div class="kicked-sub" id="kickedMsg">You have been temporarily restricted from BCA SEC B EXCLUSIVE by an admin.</div>
+  <div class="kicked-timer" id="kickedTimer"></div>
+  <button class="kicked-logout" onclick="doLogout()">← Sign out</button>
+</div>
+
+<!-- ===== MODERATION MODAL ===== -->
+<div class="mod-modal-overlay" id="modModal">
+  <div class="mod-modal-box">
+    <h3 id="modModalTitle">Confirm Action</h3>
+    <p id="modModalDesc">Are you sure?</p>
+    <div id="modDurationWrap" style="margin-bottom:16px;display:none;">
+      <label class="form-label">DURATION</label>
+      <select class="form-input" id="modDurationSel" style="margin-bottom:0;">
+        <option value="1">1 day</option>
+        <option value="3">3 days</option>
+        <option value="7" selected>7 days</option>
+        <option value="14">14 days</option>
+        <option value="30">30 days</option>
+      </select>
+    </div>
+    <div class="mod-modal-btns">
+      <button class="mod-cancel-btn" onclick="closeModModal()">Cancel</button>
+      <button class="mod-confirm-btn" id="modConfirmBtn" onclick="execModAction()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUBJECT MODAL ===== -->
+<div class="modal-overlay" id="subjectModal" onclick="closeModalIfOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <h2 id="modalSubjectName"></h2>
+        <p id="modalSubjectCode"></p>
+      </div>
+      <div class="modal-close" onclick="closeModal()">✕</div>
+    </div>
+    <!-- Resource sections injected dynamically by openModal() -->
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STORAGE KEYS =====
+const SK = {
+  users:       'bca_secb_users',
+  resources:   'bca_secb_resources',
+  posts:       'bca_secb_posts',
+  session:     'bca_secb_session',
+  notices:     'bca_secb_notices',
+  memberNotes: 'bca_secb_member_notes',
+  moderation:  'bca_secb_moderation'
+};
+
+// Built-in accounts that are always present (never stored externally)
+const BUILTIN_USERS = [
+  { username: 'Class Representative', password: 'ForSecB6769', role: 'admin', name: 'Class Representative', roll: 'CR-SECB' }
+];
+
+// ===== FIREBASE REALTIME DATABASE =====
+// ⚠️  SETUP: Go to https://console.firebase.google.com → Create project → Realtime Database
+//           → Start in test mode → Copy your DB URL below (ends in .firebaseio.com)
+const FB_BASE = 'https://sec-b-data-default-rtdb.firebaseio.com';
+const FB_URL  = FB_BASE + '/users.json';
+const FB_CONFIGURED = !FB_BASE.includes('YOUR_PROJECT'); // true when URL is set
+
+// ── Status badge ──
+function setCloudStatus(msg, type) {
+  let el = document.getElementById('cloudSyncStatus');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'cloudSyncStatus';
+    el.style.cssText = `position:fixed;bottom:70px;right:22px;z-index:600;
+      padding:7px 16px;border-radius:30px;font-size:11px;font-family:'DM Mono',monospace;
+      letter-spacing:.08em;transition:opacity .5s;pointer-events:none;`;
+    document.body.appendChild(el);
+  }
+  el.style.opacity = '1';
+  el.style.background = type==='ok'  ? 'rgba(74,222,128,0.15)'
+                       : type==='err' ? 'rgba(255,107,107,0.15)'
+                       :                'rgba(0,229,200,0.12)';
+  el.style.border     = type==='ok'  ? '1px solid rgba(74,222,128,0.35)'
+                       : type==='err' ? '1px solid rgba(255,107,107,0.35)'
+                       :                '1px solid rgba(0,229,200,0.25)';
+  el.style.color      = type==='ok'  ? '#4ade80' : type==='err' ? '#ff6b6b' : '#00e5c8';
+  el.textContent = msg;
+  if (type==='ok') setTimeout(() => { el.style.opacity='0'; }, 3500);
+}
+
+// ── Read all users from Firebase ──
+async function cloudReadUsers() {
+  if (!FB_CONFIGURED) { setCloudStatus('⚠️ Firebase not configured', 'err'); return null; }
+  setCloudStatus('☁️ Loading accounts…', 'sync');
+  try {
+    const r = await fetch(FB_URL);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    // Firebase returns null if no data yet
+    if (!data) { setCloudStatus('✅ Cloud ready', 'ok'); return []; }
+    // Stored as an object keyed by username — convert to array
+    const arr = Object.values(data);
+    setCloudStatus('✅ Cloud synced', 'ok');
+    return arr;
+  } catch(e) {
+    setCloudStatus('⚠️ Cloud offline — local only', 'err');
+    return null;
+  }
+}
+
+// ── Save a single user to Firebase (keyed by username) ──
+async function cloudSaveUser(user) {
+  if (!FB_CONFIGURED) return false;
+  setCloudStatus('☁️ Saving account…', 'sync');
+  try {
+    // Use PUT to a path keyed by username so each user is its own record
+    const key = encodeURIComponent(user.username.replace(/[.#$\[\]]/g, '_'));
+    const r = await fetch(
+      `https://bca-secb-default-rtdb.firebaseio.com/users/${key}.json`,
+      { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user) }
+    );
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    setCloudStatus('✅ Account saved to cloud', 'ok');
+    return true;
+  } catch(e) {
+    setCloudStatus('⚠️ Cloud save failed — saved locally', 'err');
+    return false;
+  }
+}
+
+// ── Push full user list to Firebase ──
+async function cloudSaveAllUsers(userList) {
+  try {
+    const obj = {};
+    userList.forEach(u => {
+      const key = u.username.replace(/[.#$\[\]]/g, '_');
+      obj[key] = u;
+    });
+    const r = await fetch(FB_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj)
+    });
+    return r.ok;
+  } catch(e) { return false; }
+}
+
+// ===== PERSISTENCE HELPERS =====
+function loadUsers() {
+  try { return JSON.parse(localStorage.getItem(SK.users)) || []; } catch(e) { return []; }
+}
+function saveUsers() {
+  const toSave = users.filter(u => !BUILTIN_USERS.find(b => b.username === u.username));
+  localStorage.setItem(SK.users, JSON.stringify(toSave));
+  cloudSaveAllUsers(toSave); // sync to cloud
+}
+function loadResources() {
+  try { return JSON.parse(localStorage.getItem(SK.resources)) || []; } catch(e) { return []; }
+}
+function saveResources() { localStorage.setItem(SK.resources, JSON.stringify(adminResources)); }
+function loadPosts() {
+  try { return JSON.parse(localStorage.getItem(SK.posts)) || []; } catch(e) { return []; }
+}
+function savePosts() { localStorage.setItem(SK.posts, JSON.stringify(communityPosts)); }
+function loadNotices() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(SK.notices));
+    if (stored && stored.length >= 0) return stored;
+  } catch(e) {}
+  return [
+    { id:1, type:'urgent',  icon:'⚠️', title:'End Semester Exam Schedule',   body:'Sem 4 exams start from June 10. Download hall tickets from the portal.', date:'28 May 2026' },
+    { id:2, type:'info',    icon:'📂', title:'New Notes Uploaded',             body:'DBMS Unit 4 & 5 notes and Python lab manual have been added.',           date:'26 May 2026' },
+    { id:3, type:'success', icon:'🏆', title:'Internal Assessment Results',    body:'IA-2 marks for Sem 4 are published. Check your ERP portal.',             date:'22 May 2026' }
+  ];
+}
+function saveNotices() { localStorage.setItem(SK.notices, JSON.stringify(notices)); }
+function loadMemberNotes() {
+  try { return JSON.parse(localStorage.getItem(SK.memberNotes)) || []; } catch(e) { return []; }
+}
+function saveMemberNotes() { localStorage.setItem(SK.memberNotes, JSON.stringify(memberNotes)); }
+function loadModeration() {
+  try { return JSON.parse(localStorage.getItem(SK.moderation)) || {}; } catch(e) { return {}; }
+}
+function saveModeration() { localStorage.setItem(SK.moderation, JSON.stringify(moderation)); }
+function loadSession() {
+  try { return JSON.parse(localStorage.getItem(SK.session)); } catch(e) { return null; }
+}
+function saveSession(user) { localStorage.setItem(SK.session, JSON.stringify(user)); }
+function clearSession() { localStorage.removeItem(SK.session); }
+
+// ===== DATA STORE =====
+let users          = [...BUILTIN_USERS, ...loadUsers()];
+let currentUser    = null;
+let adminResources = loadResources();
+let communityPosts = loadPosts();
+let notices        = loadNotices();
+let memberNotes    = loadMemberNotes();
+let moderation     = loadModeration(); // { username: { type:'cooldown'|'kick', until: timestamp, reason:'' } }
+let _commFilter    = 'all'; // community filter
+
+// On startup: pull latest accounts from cloud and merge
+(async function initCloudSync() {
+  const cloudUsers = await cloudReadUsers();
+  if (cloudUsers && cloudUsers.length > 0) {
+    localStorage.setItem(SK.users, JSON.stringify(cloudUsers));
+    users = [...BUILTIN_USERS, ...cloudUsers];
+    // Re-validate any saved session against fresh cloud data
+    const saved = loadSession();
+    if (saved && !currentUser) {
+      const live = users.find(u => u.username === saved.username && u.password === saved.password);
+      if (live) loginSuccess(live);
+    }
+  }
+})();
+
+// ===== AUTH =====
+function switchAuthTab(tab, el) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('loginForm').style.display   = tab === 'login'    ? 'flex' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'flex' : 'none';
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('regError').classList.remove('show');
+}
+
+async function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  if (!u || !p) { errEl.textContent = 'Please fill in both fields.'; errEl.classList.add('show'); return; }
+
+  // Pull latest from cloud so cross-device registrations are visible
+  const cloudUsers = await cloudReadUsers();
+  if (cloudUsers && cloudUsers.length > 0) {
+    localStorage.setItem(SK.users, JSON.stringify(cloudUsers));
+    users = [...BUILTIN_USERS, ...cloudUsers];
+  }
+
+  const found = users.find(x => x.username === u && x.password === p);
+  if (!found) { errEl.textContent = 'Invalid username or password.'; errEl.classList.add('show'); return; }
+  loginSuccess(found);
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const u    = document.getElementById('regUser').value.trim();
+  const p    = document.getElementById('regPass').value;
+  const roll = document.getElementById('regRoll').value.trim();
+  const errEl = document.getElementById('regError');
+  if (!name || !u || !p || !roll) { errEl.textContent = 'Please fill in all fields.'; errEl.classList.add('show'); return; }
+  if (users.find(x => x.username === u)) { errEl.textContent = 'Username already taken. Try a different one.'; errEl.classList.add('show'); return; }
+  if (p.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.classList.add('show'); return; }
+  const newUser = { username: u, password: p, role: 'student', name, roll };
+  users.push(newUser);
+  saveUsers();   // 💾 saves locally + syncs to Google Drive
+  loginSuccess(newUser);
+}
+
+function loginSuccess(user) {
+  currentUser = user;
+  saveSession(user);
+  document.getElementById('authWall').style.display = 'none';
+
+  // ── Check if user is kicked ──
+  const ms = getModerationStatus(user.username);
+  if (ms && ms.type === 'kick') {
+    document.getElementById('kickedOverlay').classList.add('show');
+    document.getElementById('mainApp').style.display = 'none';
+    const days = Math.ceil((ms.until - Date.now()) / 86400000);
+    document.getElementById('kickedMsg').textContent =
+      `You have been kicked from BCA SEC B EXCLUSIVE by an admin${ms.reason ? ' — Reason: ' + ms.reason : ''}.`;
+    document.getElementById('kickedTimer').textContent =
+      `Access restores in approximately ${days} day${days !== 1 ? 's' : ''}.`;
+    return;
+  }
+
+  document.getElementById('mainApp').style.display = 'block';
+  const initials = user.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  document.getElementById('userAvatarHead').textContent = initials;
+  document.getElementById('userNameHead').textContent   = user.name;
+  const roleEl = document.getElementById('userRoleHead');
+  roleEl.textContent = user.role.toUpperCase();
+  roleEl.className   = 'user-role-badge ' + (user.role === 'admin' ? 'role-admin' : 'role-student');
+  if (user.role === 'admin') document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+  buildMemberNoteSubjectDropdown();
+  // Pre-fill member upload author name
+  const authorEl = document.getElementById('mnAuthorDisplay');
+  if (authorEl) authorEl.value = user.name;
+  renderResourcesPage();
+  renderMemberNotesList();
+  renderCommunityPage();
+  renderNoticeBoard();
+  if (user.role === 'admin') renderAdminPage();
+}
+
+function doLogout() {
+  currentUser = null;
+  clearSession();
+  document.getElementById('kickedOverlay').classList.remove('show');
+  document.getElementById('mainApp').style.display  = 'none';
+  document.getElementById('authWall').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  switchPage('home', document.querySelector('.nav-tab'));
+}
+
+// ===== AUTO-LOGIN ON PAGE LOAD =====
+(function autoLogin() {
+  const saved = loadSession();
+  if (!saved) return;
+  // Re-validate: make sure the user still exists in the current users array
+  const live = users.find(u => u.username === saved.username && u.password === saved.password);
+  if (live) loginSuccess(live);
+})();
+
+// ===== NAVIGATION =====
+function switchPage(page, el) {
+  // Hard block: non-admins can never access the admin page
+  if (page === 'admin') {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('🚫 Admin access only.', 'error');
+      return;
+    }
+  }
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page + 'Page').classList.add('active');
+  if (page === 'resources') renderResourcesPage();
+  if (page === 'community') renderCommunityPage();
+  if (page === 'admin') renderAdminPage();
+}
+
+// ===== ADMIN PAGE PROTECTION =====
+// Watches for any attempt to show the admin page and blocks it for non-admins
+(function guardAdminPage() {
+  const observer = new MutationObserver(() => {
+    const adminPage = document.getElementById('adminPage');
+    if (!adminPage) return;
+    if (adminPage.classList.contains('active')) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        adminPage.classList.remove('active');
+        // Show home page instead
+        const homePage = document.getElementById('homePage');
+        if (homePage) homePage.classList.add('active');
+        showToast('🚫 Admin access only.', 'error');
+      }
+    }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    const adminPage = document.getElementById('adminPage');
+    if (adminPage) observer.observe(adminPage, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+
+// ===== SEM TABS & SEARCH =====
+let currentSem = 'all';
+function switchTab(sem, el) {
+  currentSem = sem;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  filterCards();
+}
+function filterCards() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.sem-block').forEach(block => {
+    const bSem = block.dataset.sem;
+    const show = currentSem === 'all' || currentSem === bSem;
+    block.style.display = show ? '' : 'none';
+  });
+  document.querySelectorAll('.subject-card').forEach(card => {
+    const name = card.dataset.name || '';
+    const sem = card.dataset.sem;
+    const semMatch = currentSem === 'all' || currentSem === sem;
+    const textMatch = !q || name.includes(q);
+    card.classList.toggle('visible', semMatch && textMatch);
+  });
+}
+
+// ===== MODAL =====
+function openModal(name, code, sem) {
+  document.getElementById('modalSubjectName').textContent = name;
+  document.getElementById('modalSubjectCode').textContent = code + ' · ' + sem.replace('sem','SEM ').toUpperCase();
+
+  // Build dynamic resource sections from adminResources
+  const subResources = adminResources.filter(r => r.subject === name);
+  const notes = subResources.filter(r => r.type === 'notes');
+  const labs  = subResources.filter(r => r.type === 'lab');
+  const qps   = subResources.filter(r => r.type === 'qp');
+
+  function makeItems(arr) {
+    if (!arr.length) return '<div style="font-size:12px;color:var(--muted);padding:10px 0;font-family:DM Mono,monospace;">No resources uploaded yet.</div>';
+    return arr.map(r => `
+      <div class="resource-item" onclick="window.open('${r.link}','_blank')">
+        <span class="r-icon">${typeIcon(r.type)}</span>
+        <div class="r-info"><h5>${r.title}</h5><p>by ${r.by} · ${r.date}</p></div>
+        <span class="r-badge ${r.type === 'notes' ? 'new' : r.type === 'lab' ? 'vid' : 'pdf'}">${r.type === 'notes' ? 'NOTES' : r.type === 'lab' ? 'LAB' : 'Q-PAPER'}</span>
+      </div>`).join('');
+  }
+
+  const modalBody = document.querySelector('#subjectModal .modal');
+  // Remove old sections, keep header
+  const existingSections = modalBody.querySelectorAll('.modal-section');
+  existingSections.forEach(s => s.remove());
+
+  const sections = [
+    { label: 'LECTURE NOTES', items: makeItems(notes) },
+    { label: 'LAB RESOURCES', items: makeItems(labs) },
+    { label: 'QUESTION PAPERS', items: makeItems(qps) }
+  ];
+  sections.forEach(sec => {
+    const div = document.createElement('div');
+    div.className = 'modal-section';
+    div.innerHTML = `<h4>${sec.label}</h4>${sec.items}`;
+    modalBody.appendChild(div);
+  });
+
+  document.getElementById('subjectModal').classList.add('open');
+}
+function closeModal() { document.getElementById('subjectModal').classList.remove('open'); }
+function closeModalIfOverlay(e) { if (e.target === document.getElementById('subjectModal')) closeModal(); }
+
+// ===== SUBJECT CATALOGUE =====
+const SUBJECTS = {
+  sem1: [
+    { code:'BCA-101', name:'Fundamentals of Computers' },
+    { code:'BCA-102', name:'Mathematics I' },
+    { code:'BCA-103', name:'Programming in C' },
+    { code:'BCA-104', name:'Business Communication' },
+    { code:'BCA-105', name:'Digital Electronics' }
+  ],
+  sem2: [
+    { code:'BCA-201', name:'Data Structures' },
+    { code:'BCA-202', name:'Mathematics II' },
+    { code:'BCA-203', name:'OOP Programming with Java' },
+    { code:'BCA-204', name:'Computer Organisation' },
+    { code:'BCA-205', name:'Operating Systems' }
+  ],
+  sem3: [
+    { code:'BCA-301', name:'Database Management Systems' },
+    { code:'BCA-302', name:'Computer Networks' },
+    { code:'BCA-303', name:'Python Programming' },
+    { code:'BCA-304', name:'Software Engineering' },
+    { code:'BCA-305', name:'Statistics' }
+  ],
+  sem4: [
+    { code:'BCA-401', name:'Web Technologies' },
+    { code:'BCA-402', name:'Algorithm Design & Analysis' },
+    { code:'BCA-403', name:'Computer Graphics' },
+    { code:'BCA-404', name:'Microprocessor' },
+    { code:'BCA-405', name:'Numerical Methods' }
+  ],
+  sem5: [
+    { code:'BCA-501', name:'Artificial Intelligence' },
+    { code:'BCA-502', name:'Mobile App Development' },
+    { code:'BCA-503', name:'Information Security' },
+    { code:'BCA-504', name:'Cloud Computing' },
+    { code:'BCA-505', name:'Project Management' }
+  ],
+  sem6: [
+    { code:'BCA-601', name:'Machine Learning' },
+    { code:'BCA-602', name:'Internet of Things (IoT)' },
+    { code:'BCA-603', name:'Big Data Analytics' },
+    { code:'BCA-604', name:'Entrepreneurship' },
+    { code:'BCA-605', name:'Major Project' }
+  ],
+  sem7: [
+    { code:'BCA-701', name:'Deep Learning & Neural Networks' },
+    { code:'BCA-702', name:'Full Stack Web Development' },
+    { code:'BCA-703', name:'Blockchain Technology' },
+    { code:'BCA-704', name:'Human Computer Interaction' },
+    { code:'BCA-705', name:'DevOps & Cloud Native Apps' }
+  ],
+  sem8: [
+    { code:'BCA-801', name:'Cyber Forensics & Ethical Hacking' },
+    { code:'BCA-802', name:'AR/VR & Extended Reality' },
+    { code:'BCA-803', name:'Research Methodology & Technical Writing' },
+    { code:'BCA-804', name:'Industry Internship' },
+    { code:'BCA-805', name:'Final Year Project (Dissertation)' }
+  ]
+};
+
+function buildSubjectDropdown() {
+  const subSel = document.getElementById('adminSubject');
+  if (!subSel) return;
+  const prevVal = subSel.value;
+  const semLabels = {
+    sem1:'Semester 1', sem2:'Semester 2', sem3:'Semester 3', sem4:'Semester 4',
+    sem5:'Semester 5', sem6:'Semester 6', sem7:'Semester 7', sem8:'Semester 8'
+  };
+  let html = '<option value="">— Choose a Subject —</option>';
+  Object.entries(SUBJECTS).forEach(([sem, subjects]) => {
+    html += `<optgroup label="${semLabels[sem] || sem}">`;
+    subjects.forEach(s => {
+      html += `<option value="${sem}::${s.name}">${s.code} · ${s.name}</option>`;
+    });
+    html += '</optgroup>';
+  });
+  subSel.innerHTML = html;
+  if (prevVal) subSel.value = prevVal;
+}
+
+// ===== ADMIN PANEL =====
+function adminUpload() {
+  const subjectVal = document.getElementById('adminSubject').value;
+  const title = document.getElementById('adminTitle').value.trim();
+  const type = document.getElementById('adminType').value;
+  const link = document.getElementById('adminLink').value.trim();
+  const desc = document.getElementById('adminDesc').value.trim();
+  if (!subjectVal) { showToast('❌ Please select a subject.', 'error'); return; }
+  if (!title || !link) { showToast('❌ Please fill in title and link.', 'error'); return; }
+  const [sem, subject] = subjectVal.split('::');
+  const subObj = (SUBJECTS[sem] || []).find(s => s.name === subject);
+  const code = subObj ? subObj.code : '';
+  const semLabel = sem.replace('sem','Semester ');
+  adminResources.unshift({ id: Date.now(), subject, code, title, type, sem, semLabel, link, desc, by: currentUser.name, date: new Date().toLocaleDateString('en-GB') });
+  saveResources();
+  document.getElementById('adminSubject').value = '';
+  document.getElementById('adminTitle').value = '';
+  document.getElementById('adminLink').value = '';
+  document.getElementById('adminDesc').value = '';
+  showToast('✅ Resource uploaded under ' + subject + '!', 'success');
+  renderAdminPage();
+  renderResourcesPage();
+}
+
+function deleteResource(id) {
+  adminResources = adminResources.filter(r => r.id !== id);
+  saveResources();
+  renderAdminPage();
+  renderResourcesPage();
+  showToast('🗑️ Resource deleted.', 'success');
+}
+
+function renderAdminPage() {
+  buildSubjectDropdown();
+
+  // ── Official uploads list ──
+  const el = document.getElementById('adminUploadList');
+  if (!adminResources.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:30px 0;"><div class="emoji">📭</div><p style="font-size:13px;">No resources uploaded yet</p></div>';
+  } else {
+    el.innerHTML = adminResources.map(r => `
+      <div class="admin-mn-card">
+        <span style="font-size:20px;">${typeIcon(r.type)}</span>
+        <div class="admin-mn-info">
+          <h5>${r.title}</h5>
+          <p>${r.subject} · ${r.sem} · ${r.date}</p>
+        </div>
+        <div class="admin-mn-actions">
+          <button class="mn-open-btn" onclick="window.open('${r.link}','_blank')">🔗 Open</button>
+          <button class="mn-del-btn" onclick="deleteResource(${r.id})">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── Member notes management ──
+  const mnEl = document.getElementById('adminMemberNotesList');
+  const cntEl = document.getElementById('mnAdminCount');
+  if (cntEl) cntEl.textContent = memberNotes.length ? `(${memberNotes.length})` : '';
+  if (!memberNotes.length) {
+    mnEl.innerHTML = '<div class="empty-state" style="padding:30px 0;"><div class="emoji">📝</div><p style="font-size:13px;">No member notes uploaded yet</p></div>';
+  } else {
+    mnEl.innerHTML = memberNotes.map(n => `
+      <div class="admin-mn-card">
+        <span style="font-size:20px;">${typeIcon(n.type)}</span>
+        <div class="admin-mn-info">
+          <h5>${n.title}</h5>
+          <p>By <b>${n.author}</b> · ${n.subject} · ${n.date}</p>
+        </div>
+        <div class="admin-mn-actions">
+          <button class="mn-open-btn" onclick="window.open('${n.link}','_blank')">🔗 Open</button>
+          <button class="mn-del-btn" onclick="adminDeleteMemberNote(${n.id})">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── User management with moderation ──
+  const ul = document.getElementById('usersList');
+  const nonAdmin = users.filter(u => u.role !== 'admin');
+  const admins   = users.filter(u => u.role === 'admin');
+
+  let html = '';
+
+  // Show admins first (read-only row)
+  admins.forEach(u => {
+    html += `
+    <div class="user-mgmt-card" style="border-color:rgba(247,192,89,0.2);">
+      <div class="user-mgmt-top">
+        <div class="user-mgmt-avatar" style="background:linear-gradient(135deg,#f7c059,#ff9d4d);">
+          ${u.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+        </div>
+        <div class="user-mgmt-info">
+          <h5>${u.name} <span style="font-size:10px;color:var(--accent3);font-family:'DM Mono',monospace;">(${u.username})</span> <span style="font-size:10px;color:var(--accent3);font-family:'DM Mono',monospace;font-weight:700;">ADMIN</span></h5>
+          <p>${u.roll} · Admin account</p>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // Members with full mod controls
+  nonAdmin.forEach(u => {
+    const ms = getModerationStatus(u.username);
+    const isCool = ms && ms.type === 'cooldown';
+    const isKick = ms && ms.type === 'kick';
+    const statusHtml = isKick
+      ? `<span class="mod-badge mod-kicked">KICKED</span>`
+      : isCool ? `<span class="mod-badge mod-cooldown">COOLDOWN</span>` : '';
+    const initials = u.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    html += `
+    <div class="user-mgmt-card">
+      <div class="user-mgmt-top">
+        <div class="user-mgmt-avatar">${initials}</div>
+        <div class="user-mgmt-info">
+          <h5>${u.name} <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">(${u.username})</span>${statusHtml}</h5>
+          <p>${u.roll} · STUDENT${ms ? ' · Restriction expires: ' + new Date(ms.until).toLocaleDateString('en-GB') : ''}</p>
+        </div>
+      </div>
+      <div class="user-mgmt-actions">
+        <button class="mod-btn mod-btn-promo" onclick="openModModal('promote','${u.username}','${u.name}')">👑 Make Admin</button>
+        ${!isCool && !isKick ? `<button class="mod-btn mod-btn-cool" onclick="openModModal('cooldown','${u.username}','${u.name}')">⏳ Cooldown</button>` : ''}
+        ${!isKick ? `<button class="mod-btn mod-btn-kick" onclick="openModModal('kick','${u.username}','${u.name}')">🚫 Kick</button>` : ''}
+        ${ms ? `<button class="mod-btn mod-btn-lift" onclick="liftModeration('${u.username}')">✅ Lift Ban</button>` : ''}
+        <button class="mod-btn mod-btn-del" onclick="openModModal('delete','${u.username}','${u.name}')">🗑️ Delete</button>
+      </div>
+    </div>`;
+  });
+
+  if (!nonAdmin.length) html += '<div style="font-size:13px;color:var(--muted);font-family:\'DM Mono\',monospace;padding:14px 0;">No student members registered yet.</div>';
+  ul.innerHTML = html;
+}
+
+// ── Moderation helpers ──
+function getModerationStatus(username) {
+  const m = moderation[username];
+  if (!m) return null;
+  if (m.until && Date.now() > m.until) {
+    // expired — clean up
+    delete moderation[username];
+    saveModeration();
+    return null;
+  }
+  return m;
+}
+
+// ── Moderation Modal ──
+let _modAction = null;
+let _modTarget = null;
+function openModModal(action, username, displayName) {
+  _modAction = action;
+  _modTarget = username;
+  const modal = document.getElementById('modModal');
+  const titleEl = document.getElementById('modModalTitle');
+  const descEl  = document.getElementById('modModalDesc');
+  const durWrap  = document.getElementById('modDurationWrap');
+  const confirmBtn = document.getElementById('modConfirmBtn');
+  durWrap.style.display = 'none';
+  confirmBtn.className = 'mod-confirm-btn';
+  if (action === 'delete') {
+    titleEl.textContent = '🗑️ Delete Member';
+    descEl.textContent  = `Permanently delete ${displayName}'s account? This cannot be undone. All their posts will remain.`;
+  } else if (action === 'cooldown') {
+    titleEl.textContent = '⏳ Apply Cooldown';
+    descEl.textContent  = `${displayName} will not be able to post in Community or upload notes for the selected duration.`;
+    durWrap.style.display = 'block';
+  } else if (action === 'kick') {
+    titleEl.textContent = '🚫 Kick Member';
+    descEl.textContent  = `${displayName} will be locked out of the site for the selected duration.`;
+    durWrap.style.display = 'block';
+  } else if (action === 'promote') {
+    titleEl.textContent = '👑 Promote to Admin';
+    descEl.textContent  = `Give ${displayName} full admin privileges? They will be able to manage resources, notices, and moderate members.`;
+    confirmBtn.className = 'mod-confirm-btn safe';
+  }
+  modal.classList.add('open');
+}
+function closeModModal() {
+  document.getElementById('modModal').classList.remove('open');
+  _modAction = null; _modTarget = null;
+}
+function execModAction() {
+  if (!_modAction || !_modTarget) { closeModModal(); return; }
+  const days = parseInt(document.getElementById('modDurationSel').value) || 7;
+  const until = Date.now() + days * 86400000;
+  if (_modAction === 'delete') {
+    users = users.filter(u => u.username !== _modTarget);
+    delete moderation[_modTarget];
+    saveUsers(); saveModeration();
+    showToast('🗑️ Member deleted.', 'success');
+  } else if (_modAction === 'cooldown') {
+    moderation[_modTarget] = { type: 'cooldown', until, reason: 'Admin action', days };
+    saveModeration();
+    showToast(`⏳ ${_modTarget} put on ${days}-day cooldown.`, 'success');
+  } else if (_modAction === 'kick') {
+    moderation[_modTarget] = { type: 'kick', until, reason: 'Admin action', days };
+    saveModeration();
+    showToast(`🚫 ${_modTarget} kicked for ${days} days.`, 'success');
+  } else if (_modAction === 'promote') {
+    const u = users.find(x => x.username === _modTarget);
+    if (u) { u.role = 'admin'; saveUsers(); showToast('👑 User promoted to admin!', 'success'); }
+  }
+  closeModModal();
+  renderAdminPage();
+}
+function liftModeration(username) {
+  delete moderation[username];
+  saveModeration();
+  renderAdminPage();
+  showToast('✅ Restriction lifted.', 'success');
+}
+function adminDeleteMemberNote(id) {
+  memberNotes = memberNotes.filter(n => n.id !== id);
+  saveMemberNotes();
+  renderAdminPage();
+  renderMemberNotesList();
+  showToast('🗑️ Member note removed.', 'success');
+}
+
+function promoteUser(username) {
+  const u = users.find(x => x.username === username);
+  if (u) { u.role = 'admin'; saveUsers(); renderAdminPage(); showToast('👑 User promoted to admin!', 'success'); }
+}
+
+function changeAdminPassword() {
+  const currentPass = document.getElementById('pwCurrent').value;
+  const newPass     = document.getElementById('pwNew').value;
+  const confirmPass = document.getElementById('pwConfirm').value;
+  if (!currentPass || !newPass || !confirmPass) {
+    showToast('❌ Please fill in all password fields.', 'error'); return;
+  }
+  if (currentPass !== currentUser.password) {
+    showToast('❌ Current password is incorrect.', 'error'); return;
+  }
+  if (newPass.length < 6) {
+    showToast('❌ New password must be at least 6 characters.', 'error'); return;
+  }
+  if (newPass !== confirmPass) {
+    showToast('❌ New passwords do not match.', 'error'); return;
+  }
+  const u = users.find(x => x.username === currentUser.username);
+  if (u) {
+    u.password = newPass;
+    currentUser.password = newPass;
+    saveUsers();
+    saveSession(currentUser);
+    document.getElementById('pwCurrent').value = '';
+    document.getElementById('pwNew').value = '';
+    document.getElementById('pwConfirm').value = '';
+    showToast('✅ Password changed successfully!', 'success');
+  }
+}
+
+function typeIcon(type) {
+  if (type === 'notes') return '📝';
+  if (type === 'lab') return '🧪';
+  if (type === 'qp') return '📄';
+  return '📁';
+}
+
+// ===== RESOURCES PAGE =====
+let resFilter = 'all';
+const SEM_LABELS = { sem1:'Semester 1', sem2:'Semester 2', sem3:'Semester 3', sem4:'Semester 4', sem5:'Semester 5', sem6:'Semester 6', sem7:'Semester 7', sem8:'Semester 8' };
+const SEM_ORDER = ['sem1','sem2','sem3','sem4','sem5','sem6','sem7','sem8'];
+
+function filterResources(f, el) {
+  resFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderResourcesPage();
+}
+
+function renderResourcesPage() {
+  const wrap = document.getElementById('resourcesGrid');
+  const empty = document.getElementById('resourcesEmpty');
+  const filtered = resFilter === 'all' ? adminResources : adminResources.filter(r => r.type === resFilter);
+  if (!filtered.length) {
+    wrap.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    // Group: sem → subject → resources
+    const grouped = {};
+    filtered.forEach(r => {
+      if (!grouped[r.sem]) grouped[r.sem] = {};
+      if (!grouped[r.sem][r.subject]) grouped[r.sem][r.subject] = [];
+      grouped[r.sem][r.subject].push(r);
+    });
+    let html = '';
+    SEM_ORDER.forEach(sem => {
+      if (!grouped[sem]) return;
+      html += `<div class="res-sem-block">
+        <div class="res-sem-header">
+          <span class="sem-pill" style="font-size:10px;">${sem.replace('sem','SEM 0')}</span>
+          <span style="font-size:17px;font-weight:700;">${SEM_LABELS[sem]}</span>
+        </div>`;
+      Object.keys(grouped[sem]).forEach(subj => {
+        const items = grouped[sem][subj];
+        const code = items[0].code || '';
+        html += `<div class="res-subject-block">
+          <div class="res-subject-header">
+            <span style="font-size:14px;font-weight:700;">${subj}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);">${code}</span>
+          </div>
+          <div class="resources-grid">`;
+        items.forEach(r => {
+          html += `<div class="resource-card" onclick="window.open('${r.link}','_blank')">
+            <div class="resource-card-icon">${typeIcon(r.type)}</div>
+            <h4>${r.title}</h4>
+            <p>${r.desc || r.subject}</p>
+            <div class="resource-card-meta">
+              <span class="r-type-badge r-type-${r.type}">${r.type === 'notes' ? 'NOTES' : r.type === 'lab' ? 'LAB COPY' : 'Q-PAPER'}</span>
+              <span class="r-by">by ${r.by} · ${r.date}</span>
+            </div>
+          </div>`;
+        });
+        html += `</div></div>`;
+      });
+      html += `</div>`;
+    });
+    wrap.innerHTML = html;
+  }
+  renderMemberNotesList();
+}
+
+// ── Build subject dropdown for member upload ──
+function buildMemberNoteSubjectDropdown() {
+  const sel = document.getElementById('mnSubject');
+  if (!sel) return;
+  const semLabels = { sem1:'Semester 1', sem2:'Semester 2', sem3:'Semester 3', sem4:'Semester 4', sem5:'Semester 5', sem6:'Semester 6', sem7:'Semester 7', sem8:'Semester 8' };
+  let html = '<option value="">— Choose Subject —</option>';
+  Object.entries(SUBJECTS).forEach(([sem, subjects]) => {
+    html += `<optgroup label="${semLabels[sem] || sem}">`;
+    subjects.forEach(s => { html += `<option value="${sem}::${s.name}">${s.code} · ${s.name}</option>`; });
+    html += '</optgroup>';
+  });
+  sel.innerHTML = html;
+}
+
+// ── Member submits a note ──
+function submitMemberNote() {
+  if (!currentUser) return;
+  // Check cooldown
+  const ms = getModerationStatus(currentUser.username);
+  if (ms && (ms.type === 'cooldown' || ms.type === 'kick')) {
+    showToast('⏳ You are restricted from uploading right now.', 'error'); return;
+  }
+  const author  = document.getElementById('mnAuthorDisplay').value.trim() || currentUser.name;
+  const subVal  = document.getElementById('mnSubject').value;
+  const title   = document.getElementById('mnTitle').value.trim();
+  const type    = document.getElementById('mnType').value;
+  const link    = document.getElementById('mnLink').value.trim();
+  const desc    = document.getElementById('mnDesc').value.trim();
+  if (!subVal)  { showToast('❌ Please select a subject.', 'error'); return; }
+  if (!title)   { showToast('❌ Please add a title.', 'error'); return; }
+  if (!link)    { showToast('❌ Please paste a link to your notes.', 'error'); return; }
+  const [sem, subject] = subVal.split('::');
+  const subObj = (SUBJECTS[sem] || []).find(s => s.name === subject);
+  memberNotes.unshift({
+    id: Date.now(), author, subject, sem, code: subObj ? subObj.code : '',
+    title, type, link, desc,
+    uploaderUsername: currentUser.username,
+    date: new Date().toLocaleDateString('en-GB')
+  });
+  saveMemberNotes();
+  document.getElementById('mnTitle').value = '';
+  document.getElementById('mnLink').value  = '';
+  document.getElementById('mnDesc').value  = '';
+  document.getElementById('mnSubject').value = '';
+  showToast('✅ Notes shared with your batchmates!', 'success');
+  renderMemberNotesList();
+  if (currentUser.role === 'admin') renderAdminPage();
+}
+
+// ── Render member notes list on resources page ──
+function renderMemberNotesList() {
+  const list  = document.getElementById('memberNotesList');
+  const empty = document.getElementById('memberNotesEmpty');
+  if (!list) return;
+  if (!memberNotes.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = memberNotes.map(n => {
+    const initials = n.author.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const canDel = currentUser?.role === 'admin' || currentUser?.username === n.uploaderUsername;
+    return `
+    <div class="member-note-card" onclick="window.open('${n.link}','_blank')">
+      <div class="mn-avatar">${initials}</div>
+      <div class="mn-body">
+        <h5>${n.title}</h5>
+        <p>${n.author} · ${n.subject} · <span style="font-family:'DM Mono',monospace;">${n.code || ''}</span> · ${n.date}${n.desc ? ' — ' + n.desc : ''}</p>
+      </div>
+      <span style="font-size:18px;flex-shrink:0;">${typeIcon(n.type)}</span>
+      <span class="mn-open-btn" onclick="event.stopPropagation();window.open('${n.link}','_blank')">🔗 Open</span>
+      ${canDel ? `<button class="mn-del-btn" onclick="event.stopPropagation();deleteMemberNote(${n.id})">🗑️</button>` : ''}
+    </div>`;
+  }).join('');
+}
+function deleteMemberNote(id) {
+  memberNotes = memberNotes.filter(n => n.id !== id);
+  saveMemberNotes();
+  renderMemberNotesList();
+  if (currentUser?.role === 'admin') renderAdminPage();
+  showToast('🗑️ Note removed.', 'success');
+}
+
+// ===== COMMUNITY PAGE =====
+function submitPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const body = document.getElementById('postBody').value.trim();
+  const tag = document.getElementById('postTag').value;
+  if (!title || !body) { showToast('❌ Please fill in title and content.', 'error'); return; }
+  const tagLabels = { notes:'📝 Notes', doubt:'❓ Doubt', tip:'💡 Tip', resource:'🔗 Resource', announcement:'📢 Announcement' };
+  communityPosts.unshift({
+    id: Date.now(), title, body, tag, tagLabel: tagLabels[tag],
+    author: currentUser.name, initials: currentUser.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
+    date: new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),
+    likes: 0, likedBy: []
+  });
+  savePosts();  // 💾 persist
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postBody').value = '';
+  showToast('✅ Post shared with the community!', 'success');
+  renderCommunityPage();
+}
+
+function toggleLike(id) {
+  const post = communityPosts.find(p => p.id === id);
+  if (!post) return;
+  const idx = post.likedBy.indexOf(currentUser.username);
+  if (idx === -1) { post.likedBy.push(currentUser.username); post.likes++; }
+  else { post.likedBy.splice(idx, 1); post.likes--; }
+  savePosts();  // 💾 persist
+  renderCommunityPage();
+}
+
+function deletePost(id) {
+  communityPosts = communityPosts.filter(p => p.id !== id);
+  savePosts();  // 💾 persist
+  renderCommunityPage();
+  showToast('🗑️ Post deleted.', 'success');
+}
+
+function renderCommunityPage() {
+  const feed = document.getElementById('postFeed');
+  const empty = document.getElementById('noPosts');
+  if (!communityPosts.length) { feed.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  feed.innerHTML = communityPosts.map(p => {
+    const liked = p.likedBy.includes(currentUser?.username);
+    const canDelete = currentUser?.role === 'admin' || currentUser?.username === users.find(u => u.name === p.author)?.username;
+    return `
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar">${p.initials}</div>
+        <div class="post-meta"><h4>${p.author}</h4><p>${p.date}</p></div>
+      </div>
+      <div style="margin-bottom:8px;"><span class="post-tag">${p.tagLabel}</span></div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:8px;">${p.title}</div>
+      <div class="post-body">${p.body.replace(/\n/g,'<br>')}</div>
+      <div class="post-footer">
+        <button class="post-action ${liked ? 'liked' : ''}" onclick="toggleLike(${p.id})">❤️ ${p.likes}</button>
+        ${canDelete ? `<button class="post-action" onclick="deletePost(${p.id})" style="color:var(--danger);">🗑️ Delete</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== TOAST =====
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type === 'success' ? 'success-toast' : 'error-toast');
+  if (type === 'success') playSoundSuccess(); else playSoundError();
+  setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+</script>
+
+<!-- ===== SOUNDS & ANIMATIONS ===== -->
+<script>
+/* ── WEB AUDIO ENGINE ── */
+const _AC = window.AudioContext || window.webkitAudioContext;
+let _ac;
+function ac() { if (!_ac) _ac = new _AC(); return _ac; }
+
+function tone(freq, dur, type = 'sine', vol = 0.1, delay = 0) {
+  try {
+    const ctx = ac();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + dur);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + dur + 0.01);
+  } catch(e) {}
+}
+
+function playSoundClick()   { tone(900, 0.07, 'square', 0.04); }
+function playSoundNav()     { tone(740, 0.1,  'sine',   0.07); }
+function playSoundSuccess() { [523,659,784,1047].forEach((f,i) => tone(f, 0.22, 'sine', 0.09, i*0.09)); }
+function playSoundError()   { tone(220,0.28,'sawtooth',0.07); tone(180,0.28,'sawtooth',0.05,0.1); }
+function playSoundLogout()  { [784,659,523,440].forEach((f,i) => tone(f, 0.14, 'sine', 0.07, i*0.07)); }
+function playSoundLogin()   { [440,523,659,784,1047].forEach((f,i) => tone(f, 0.25, 'sine', 0.07, i*0.1)); }
+function playSoundHover()   { tone(1400, 0.05, 'sine', 0.025); }
+function playSoundWelcome() { [523,659,784,880,1047,1319].forEach((f,i) => tone(f, 0.32, 'sine', 0.07, i*0.11)); }
+
+/* Intercept login / logout to add sounds */
+const _origLogin  = doLogin;
+const _origLogout = doLogout;
+doLogin = function() {
+  _origLogin.apply(this, arguments);
+  const u = users.find(x => x.username === document.getElementById('loginUser')?.value?.trim());
+  if (u) playSoundLogin();
+};
+doLogout = function() { playSoundLogout(); setTimeout(_origLogout, 250); };
+
+/* ── LOADING SCREEN ── */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    playSoundWelcome();
+  }, 2000);
+});
+
+/* ── FLOATING PARTICLES ── */
+(function initParticles() {
+  const canvas = document.getElementById('particleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  const cols = ['rgba(0,229,200,', 'rgba(124,109,250,', 'rgba(247,192,89,', 'rgba(74,222,128,'];
+
+  class Particle {
+    reset() {
+      this.x = Math.random() * W; this.y = Math.random() * H;
+      this.r = Math.random() * 1.6 + 0.3;
+      this.vx = (Math.random() - 0.5) * 0.35;
+      this.vy = (Math.random() - 0.5) * 0.35 - 0.08;
+      this.col = cols[Math.floor(Math.random() * cols.length)];
+      this.a = Math.random() * 0.45 + 0.1;
+    }
+    constructor() { this.reset(); }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.y < -8) this.reset();
+      if (this.x < -8) this.x = W + 8;
+      if (this.x > W + 8) this.x = -8;
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.col + this.a + ')'; ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 90; i++) particles.push(new Particle());
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update(); particles[i].draw();
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 110) {
+          ctx.strokeStyle = `rgba(0,229,200,${0.045 * (1 - d / 110)})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ── CURSOR SPARKLES ── */
+(function initSparkles() {
+  const sparkCols = ['#00e5c8','#7c6dfa','#f7c059','#4ade80','#ff6b6b','#fff'];
+  document.addEventListener('mousemove', e => {
+    if (Math.random() > 0.82) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const c = sparkCols[Math.floor(Math.random() * sparkCols.length)];
+      const sz = Math.random() * 6 + 3;
+      const tx = (Math.random() - 0.5) * 50 + 'px';
+      const ty = (Math.random() - 0.5) * 50 + 'px';
+      s.style.cssText = `left:${e.clientX - sz/2}px;top:${e.clientY - sz/2}px;`
+        + `width:${sz}px;height:${sz}px;background:${c};--tx:${tx};--ty:${ty};`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 720);
+    }
+  });
+})();
+
+/* ── RIPPLE + CLICK SOUND ON BUTTONS ── */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button, .res-btn, .tab, .nav-tab, .auth-btn, .submit-btn, .filter-btn, .auth-tab');
+  if (!btn) return;
+  playSoundClick();
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const rect = btn.getBoundingClientRect();
+  const sz = Math.max(rect.width, rect.height) * 2.2;
+  r.style.cssText = `width:${sz}px;height:${sz}px;`
+    + `left:${e.clientX - rect.left - sz/2}px;top:${e.clientY - rect.top - sz/2}px;`;
+  btn.style.overflow = 'hidden'; btn.style.position = 'relative';
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+});
+
+/* ── NAV SOUND ── */
+const _origSwitch = switchPage;
+switchPage = function(page, el) { playSoundNav(); _origSwitch(page, el); };
+
+/* ── HOVER SOUNDS on subject cards ── */
+document.addEventListener('mouseover', e => {
+  if (e.target.closest('.subject-card, .resource-card, .notice')) playSoundHover();
+});
+</script>
+</body>
+</html>
